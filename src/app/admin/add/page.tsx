@@ -250,7 +250,7 @@ export default function AddPropertyPage() {
                 value={formData.broker_name}
                 onChange={(e) => setFormData({...formData, broker_name: e.target.value})}
               />
-              <p className="text-xs text-neutral-500 mt-2">Irá aparecer para o cliente (Ex: "Fale com Ana Silva").</p>
+              <p className="text-xs text-neutral-500 mt-2">Irá aparecer para o cliente (Ex: &quot;Fale com Ana Silva&quot;).</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-neutral-700 mb-2">WhatsApp Direto do Corretor</label>
