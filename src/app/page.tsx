@@ -1,7 +1,5 @@
 import { supabase, type Property } from "@/lib/supabase";
-import { PropertyCard } from "@/components/ui/PropertyCard";
 import { PropertyGrid } from "@/components/ui/PropertyGrid";
-import { ChevronDown } from "lucide-react";
 import { SearchBar } from "@/components/ui/SearchBar";
 import Link from "next/link";
 

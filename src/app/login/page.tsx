@@ -30,7 +30,7 @@ export default function LoginPage() {
         const data = await res.json();
         setError(data.error || "Erro ao fazer login");
       }
-    } catch (err) {
+    } catch {
       setError("Erro de conexão");
     } finally {
       setLoading(false);

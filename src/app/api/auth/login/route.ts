@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ error: 'Senha incorreta' }, { status: 401 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
   }
 }
