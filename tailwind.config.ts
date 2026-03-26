@@ -11,6 +11,13 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "hi-blue": "#448DD2",
+        "hi-orange": "#F38D30",
+        "hi-dark-orange": "#E2672D",
+      },
+      fontFamily: {
+        sans: ["var(--font-montserrat)", "sans-serif"],
+        serif: ["var(--font-playfair)", "serif"],
       },
     },
   },
