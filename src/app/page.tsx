@@ -2,7 +2,6 @@ import { supabase, type Property } from "@/lib/supabase";
 import { PropertyGrid } from "@/components/ui/PropertyGrid";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
-import Link from "next/link";
 
 export const revalidate = 0; // Disable static rendering to always show fresh data
 
@@ -56,14 +55,12 @@ export default async function Home({
 
       // Match natural language for type
       const matchesSale = p.type === 'Sale' && (query.includes('venda') || query.includes('comprar'));
-      const matchesRent = p.type === 'Rent' && (query.includes('locação') || query.includes('aluguel'));
 
-      return titleMatch || locationMatch || descriptionMatch || matchesSale || matchesRent;
+      return titleMatch || locationMatch || descriptionMatch || matchesSale;
     })
     : displayProperties;
 
   const salesProperties = filteredProperties.filter(p => p.type === 'Sale');
-  const rentProperties = filteredProperties.filter(p => p.type === 'Rent');
 
   return (
     <main className="min-h-screen">
@@ -106,7 +103,7 @@ export default async function Home({
             <span className="font-serif italic font-bold text-white filter drop-shadow-md">
               nova história
             </span>
-            {' '}começa.
+            {' '}Começa
           </h1>
 
           {/* Search Bar */}
