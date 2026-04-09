@@ -21,7 +21,7 @@ export function WhatsAppButton({
       href={`https://wa.me/${targetNumber}?text=${encodedMessage}`}
       target="_blank"
       rel="noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-[60px] h-[60px] bg-[#00E676] hover:bg-[#00C853] text-white rounded-full shadow-lg hover:scale-105 transition-transform duration-300 ring-2 ring-white"
+      className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-[60px] h-[60px] bg-[#00E676] hover:bg-[#00C853] text-white rounded-full shadow-lg hover:scale-105 transition-transform duration-300 ring-2 ring-white animate-bounce hover:animate-none"
       aria-label="Falar no WhatsApp"
       title="Falar no WhatsApp"
     >

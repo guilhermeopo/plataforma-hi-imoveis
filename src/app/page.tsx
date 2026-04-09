@@ -87,24 +87,17 @@ export default async function Home({
         <div className="relative z-20 text-center px-4 max-w-5xl mx-auto animate-fade-in-up -mt-16 md:-mt-24">
 
           {/* Logo Centralizada (Responsive Horizontal Box) */}
-          <div className="flex flex-col items-center justify-center mb-0 mt-10 md:mt-6">
-            <div className="w-64 md:w-[500px] hover:scale-105 transition-transform duration-700 relative z-30">
+          <div className="flex flex-col items-center justify-center mb-8 mt-16 md:mt-8">
+            <div className="w-64 sm:w-80 md:w-[500px] hover:scale-105 transition-transform duration-700 relative z-30">
               <img
                 src="/logo-transparent.png"
                 alt="Logo HI Imóveis"
-                className="w-full h-auto object-contain drop-shadow-[0_15px_20px_rgba(0,0,0,0.8)]"
+                className="w-full h-auto object-contain drop-shadow-[0_15px_30px_rgba(255,255,255,0.15)] brightness-110 filter"
               />
             </div>
           </div>
 
           {/* Frase Principal Estilizada */}
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-sans text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] mb-10 max-w-4xl mx-auto tracking-wide leading-relaxed relative z-30">
-            Onde sua{' '}
-            <span className="font-serif italic font-bold text-white filter drop-shadow-md">
-              nova história
-            </span>
-            {' '}Começa
-          </h1>
 
           {/* Search Bar */}
           <SearchBar />
