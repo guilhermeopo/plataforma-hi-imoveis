@@ -66,10 +66,10 @@ export default async function Home({
   return (
     <main className="min-h-screen">
       {/* Navbar (Header) */}
-      <header className="absolute top-0 inset-x-0 z-50 bg-white shadow-md h-20 px-4 md:px-8 flex items-center justify-between">
+      <header className="absolute top-0 inset-x-0 z-50 bg-white shadow-md h-20 md:h-[90px] px-4 md:px-8 flex items-center justify-between">
         {/* Logo */}
-        <div className="w-36 md:w-56 h-auto flex items-center">
-          <img src="/logo.png" alt="Logo HI Imóveis" className="w-full h-auto object-contain" />
+        <div className="w-48 sm:w-60 md:w-72 h-full flex items-center justify-start py-2.5">
+          <img src="/logo.png" alt="Logo HI Imóveis" className="w-[110%] max-w-[110%] h-auto md:h-full object-contain object-left md:scale-[1.10] origin-left" />
         </div>
 
         {/* Desktop Links */}
