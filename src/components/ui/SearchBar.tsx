@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export function SearchBar() {
@@ -19,20 +19,65 @@ export function SearchBar() {
   }
 
   return (
-    <form onSubmit={handleSearch} className="mt-12 max-w-3xl mx-auto bg-white/95 p-2 rounded-2xl backdrop-blur-md border border-neutral-200 shadow-2xl flex flex-col md:flex-row gap-2">
-      <div className="flex-1 flex items-center bg-white rounded-xl px-4 py-3 border border-neutral-100 shadow-inner">
-        <Search className="text-hi-blue mr-3" size={20} />
-        <input 
-          type="text" 
-          placeholder="Busque por bairro, cidade, título ou tipo (ex: Venda ou Locação)..." 
-          className="bg-transparent border-none text-neutral-800 focus:outline-none w-full placeholder-neutral-400 font-medium"
+    <form onSubmit={handleSearch} className="mt-8 max-w-sm w-full mx-auto bg-white p-6 rounded-lg shadow-xl flex flex-col gap-4 text-left">
+      <div className="relative">
+        <select 
+          className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer"
           value={term}
           onChange={(e) => setTerm(e.target.value)}
-        />
+        >
+          <option value="">O que deseja?</option>
+          <option value="venda">Comprar</option>
+        </select>
+        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
       </div>
-      <button type="submit" className="bg-hi-blue hover:bg-[#347Ab7] text-white px-8 py-3 rounded-xl font-semibold transition-colors shadow-md">
-        Buscar
+
+      <div className="relative">
+        <select className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer">
+          <option value="">Bairro</option>
+        </select>
+        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
+      </div>
+
+      <div className="relative">
+        <select className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer">
+          <option value="">Tipos de imóvel</option>
+        </select>
+        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
+      </div>
+
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <input 
+            type="number"
+            placeholder="Valor mín. (R$)"
+            className="w-full border border-neutral-200 text-neutral-800 py-3 px-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm placeholder-neutral-500"
+          />
+        </div>
+        <div className="relative flex-1">
+          <input 
+            type="number"
+            placeholder="Valor máx. (R$)"
+            className="w-full border border-neutral-200 text-neutral-800 py-3 px-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm placeholder-neutral-500"
+          />
+        </div>
+      </div>
+
+      <div className="relative">
+        <select className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer">
+          <option value="">Empreendimento</option>
+        </select>
+        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
+      </div>
+
+      <button type="submit" className="bg-[#FFB800] hover:bg-[#E5A500] text-white py-3 rounded-sm font-bold transition-colors mt-2 text-[15px] shadow-sm">
+        BUSCAR
       </button>
+
+      <div className="flex justify-center items-center mt-2 text-neutral-700 text-sm gap-2">
+        <Search size={16} />
+        <a href="#" className="hover:underline font-medium">Buscar por código</a>
+      </div>
     </form>
   );
 }

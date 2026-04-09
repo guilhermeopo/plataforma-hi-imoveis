@@ -14,8 +14,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   }
 }
 
+// Safely ensure url is valid http/https format to prevent createClient from crashing
+const validUrl = supabaseUrl && supabaseUrl.startsWith("http") 
+  ? supabaseUrl 
+  : "https://placeholder-project.supabase.co";
+
 export const supabase = createClient(
-  supabaseUrl || "https://placeholder-project.supabase.co",
+  validUrl,
   supabaseAnonKey || "placeholder-anon-key"
 );
 

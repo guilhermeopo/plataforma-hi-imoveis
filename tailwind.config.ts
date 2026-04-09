@@ -11,13 +11,22 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        "hi-blue": "#448DD2",
-        "hi-orange": "#F38D30",
-        "hi-dark-orange": "#E2672D",
+        // New Palette Mapping
+        "hi-dark": "#222222",
+        "hi-gray": "#E5E5E5",
+        "hi-orange-red": "#E65100",
+        "hi-yellow": "#FFB800",
+        "hi-blue-light": "#0088CC",
+        
+        // Legacy fallbacks
+        "hi-blue": "#0088CC",
+        "hi-orange": "#E65100",
+        "hi-dark-orange": "#FFB800",
       },
       fontFamily: {
-        sans: ["var(--font-montserrat)", "sans-serif"],
-        serif: ["var(--font-playfair)", "serif"],
+        sans: ["'Neue Montreal'", "var(--font-montserrat)", "Inter", "sans-serif"],
+        serif: ["'The Seasons'", "var(--font-playfair)", "serif"],
+        madani: ["'Madani Arabic'", "sans-serif"],
       },
     },
   },
