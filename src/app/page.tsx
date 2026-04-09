@@ -2,6 +2,7 @@ import { supabase, type Property } from "@/lib/supabase";
 import { PropertyGrid } from "@/components/ui/PropertyGrid";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
+import { Menu } from "lucide-react";
 
 export const revalidate = 0; // Disable static rendering to always show fresh data
 
@@ -64,8 +65,35 @@ export default async function Home({
 
   return (
     <main className="min-h-screen">
-      {/* Barra Branca no Topo */}
-      <div className="absolute top-0 inset-x-0 z-50 h-10 md:h-12 bg-white w-full opacity-100 shadow-sm" />
+      {/* Navbar (Header) */}
+      <header className="absolute top-0 inset-x-0 z-50 bg-white shadow-md h-20 px-4 md:px-8 flex items-center justify-between">
+        {/* Logo */}
+        <div className="w-36 md:w-56 h-auto flex items-center">
+          <img src="/logo.png" alt="Logo HI Imóveis" className="w-full h-auto object-contain" />
+        </div>
+
+        {/* Desktop Links */}
+        <nav className="hidden lg:flex items-center gap-6 font-sans text-sm font-semibold text-neutral-800">
+          <a href="#" className="hover:text-[#d95d29] transition-colors">Sobre nós</a>
+          <a href="#venda" className="hover:text-[#d95d29] transition-colors">Imóveis</a>
+          <a href="#" className="hover:text-[#d95d29] transition-colors">Empreendimentos</a>
+          <a href="#" className="hover:text-[#d95d29] transition-colors">Contato</a>
+        </nav>
+
+        {/* Desktop Actions */}
+        <div className="hidden lg:flex items-center gap-4">
+          <a href="#" className="text-sm font-bold text-white bg-[#d95d29] hover:bg-[#b04a1f] px-6 py-2.5 rounded-sm transition-colors shadow-sm">
+            Anuncie Aqui
+          </a>
+        </div>
+
+        {/* Mobile Hamburger */}
+        <div className="lg:hidden flex items-center">
+          <button className="text-[#d95d29] p-2 hover:bg-neutral-100 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#d95d29]">
+            <Menu size={32} />
+          </button>
+        </div>
+      </header>
 
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -86,16 +114,8 @@ export default async function Home({
         {/* Hero Content */}
         <div className="relative z-20 text-center px-4 max-w-5xl mx-auto animate-fade-in-up -mt-16 md:-mt-24">
 
-          {/* Logo Centralizada (Responsive Horizontal Box) */}
-          <div className="flex flex-col items-center justify-center mb-8 mt-16 md:mt-8">
-            <div className="w-64 sm:w-80 md:w-[500px] hover:scale-105 transition-transform duration-700 relative z-30">
-              <img
-                src="/logo-transparent.png"
-                alt="Logo HI Imóveis"
-                className="w-full h-auto object-contain drop-shadow-[0_15px_30px_rgba(255,255,255,0.15)] brightness-110 filter"
-              />
-            </div>
-          </div>
+          {/* Hero Content Space (Logo used to be here) */}
+          <div className="h-16 md:h-24"></div>
 
           {/* Frase Principal Estilizada */}
 
