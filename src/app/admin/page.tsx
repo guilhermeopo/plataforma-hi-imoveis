@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase, type Property, type Project } from "@/lib/supabase";
 import { Trash2, CheckCircle, Image as ImageIcon, Pencil, Building2, Home } from "lucide-react";
 import Link from "next/link";
+import NextImage from "next/image";
 import { cn } from "@/lib/utils";
 
 export default function AdminDashboard() {
@@ -59,11 +60,7 @@ export default function AdminDashboard() {
     await supabase.from("properties").update({ status: "Sold" }).eq("id", id);
   }
 
-  async function markProjectStage(id: string, newStatus: Project['status']) {
-    if (!window.confirm("Atualizar status do empreendimento?")) return;
-    setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p)));
-    await supabase.from("projects").update({ status: newStatus }).eq("id", id);
-  }
+
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -136,13 +133,13 @@ export default function AdminDashboard() {
                   </td>
                 </tr>
               ) : (
-                (activeTab === "properties" ? filteredProperties : filteredProjects).map((item: any) => (
+                (activeTab === "properties" ? filteredProperties : filteredProjects).map((item: Property | Project) => (
                   <tr key={item.id} className="hover:bg-neutral-50 transition-colors group">
                     <td className="p-4">
                       <div className="flex items-center gap-4">
                         <div className="w-16 h-16 rounded-xl bg-neutral-100 overflow-hidden shrink-0 border border-neutral-200">
                           {item.main_image_url ? (
-                            <img src={item.main_image_url} alt={item.title} className="w-full h-full object-cover" />
+                            <NextImage src={item.main_image_url!} alt={item.title} width={64} height={64} className="w-full h-full object-cover" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-neutral-400">
                               <ImageIcon size={24} />
@@ -163,29 +160,29 @@ export default function AdminDashboard() {
                        <td className="p-4">
                         <span className={cn(
                           "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset",
-                          item.type === 'Sale' 
+                          (item as Property).type === 'Sale' 
                             ? "bg-blue-500/10 text-blue-400 ring-blue-500/20"
                             : "bg-purple-500/10 text-purple-400 ring-purple-500/20"
                         )}>
-                          {item.type === 'Sale' ? 'Venda' : 'Aluguel'}
+                          {(item as Property).type === 'Sale' ? 'Venda' : 'Aluguel'}
                         </span>
                       </td>
                     ) : (
                       <td className="p-4">
                         <span className={cn(
                           "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset",
-                          item.status === 'Launch' ? "bg-hi-orange/10 text-hi-dark-orange ring-hi-orange/20" :
-                          item.status === 'InProgress' ? "bg-hi-blue/10 text-hi-blue ring-hi-blue/20" :
+                          (item as Project).status === 'Launch' ? "bg-hi-orange/10 text-hi-dark-orange ring-hi-orange/20" :
+                          (item as Project).status === 'InProgress' ? "bg-hi-blue/10 text-hi-blue ring-hi-blue/20" :
                           "bg-emerald-50 text-emerald-600 ring-emerald-200"
                         )}>
-                          {item.status === 'Launch' ? 'Lançamento' : item.status === 'InProgress' ? 'Em Obras' : 'Pronto'}
+                          {(item as Project).status === 'Launch' ? 'Lançamento' : (item as Project).status === 'InProgress' ? 'Em Obras' : 'Pronto'}
                         </span>
-                        {item.stage && <p className="text-xs text-neutral-500 mt-1">{item.stage}</p>}
+                        {(item as Project).stage && <p className="text-xs text-neutral-500 mt-1">{(item as Project).stage}</p>}
                       </td>
                     )}
                    
                     <td className="p-4 font-bold text-hi-blue">
-                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.price || item.price_starts_at)}
+                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((item as Property).price ?? (item as Project).price_starts_at)}
                     </td>
 
                     <td className="p-4">

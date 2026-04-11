@@ -1,6 +1,7 @@
 import { Header } from "@/components/ui/Header";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { Building2, Award, Target, Users } from "lucide-react";
+import Image from "next/image";
 
 export default function SobrePage() {
   return (
@@ -34,7 +35,7 @@ export default function SobrePage() {
             </p>
           </div>
           <div className="aspect-square bg-neutral-200 rounded-3xl overflow-hidden shadow-xl border-4 border-white/50 relative">
-             <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1400&auto=format&fit=crop" className="object-cover w-full h-full" alt="HI Imóveis Escritório" />
+             <Image src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1400&auto=format&fit=crop" width={800} height={800} className="object-cover w-full h-full" alt="HI Imóveis Escritório" />
           </div>
         </div>
       </section>

@@ -222,7 +222,7 @@ export default function EditProjectPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Valor "A partir de" (R$)</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Valor &quot;A partir de&quot; (R$)</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                     <DollarSign size={18} className="text-neutral-500" />

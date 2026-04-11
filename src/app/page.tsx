@@ -4,6 +4,7 @@ import { ProjectGrid } from "@/components/ui/ProjectGrid";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { Header } from "@/components/ui/Header";
+import Image from "next/image";
 
 export const revalidate = 0; // Disable static rendering to always show fresh data
 
@@ -155,7 +156,7 @@ export default async function Home({
           <div className="flex flex-col items-center md:items-start">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-1">
-                <img src="/logo.png" alt="HI Imóveis Logo" className="w-full h-full object-contain" />
+                <Image src="/logo.png" alt="HI Imóveis Logo" width={48} height={48} className="w-full h-full object-contain" />
               </div>
               <div className="text-2xl font-bold tracking-tighter text-[#2C2C2C]">
                 HI<span className="text-hi-dark-orange ml-1.5">IMÓVEIS</span>
