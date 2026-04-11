@@ -35,6 +35,7 @@ export default function EditProjectPage() {
     if (id) {
       loadPropertyData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   async function loadPropertyData() {
