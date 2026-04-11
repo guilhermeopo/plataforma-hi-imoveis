@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { LayoutDashboard, PlusCircle, LogOut, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -19,7 +20,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <aside className="w-64 bg-white border-r border-neutral-200 flex flex-col hidden md:flex shadow-sm">
         <div className="p-6 flex items-center gap-3 border-b border-neutral-800/50 pb-8">
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1 cursor-pointer hover:scale-105 transition-transform">
-            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+            <Image src="/logo.png" alt="Logo" width={40} height={40} className="w-full h-full object-contain" />
           </div>
           <h1 className="text-xl font-bold tracking-tighter text-white">
             HI<span className="text-[#D4AF37] ml-1.5">IMÓVEIS</span>
