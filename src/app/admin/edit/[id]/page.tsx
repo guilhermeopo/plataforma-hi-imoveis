@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { ArrowLeft, Save, Building, Image as ImageIcon, DollarSign, MapPin } from "lucide-react";
 import Link from "next/link";
 
-export default function AddPropertyPage() {
+export default function EditPropertyPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
+
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [formData, setFormData] = useState({
@@ -25,6 +29,49 @@ export default function AddPropertyPage() {
     broker_name: "",
     broker_whatsapp: "",
   });
+  const [existingMainImage, setExistingMainImage] = useState("");
+  const [existingGallery, setExistingGallery] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (id) {
+      loadPropertyData();
+    }
+  }, [id]);
+
+  async function loadPropertyData() {
+    try {
+      const { data, error } = await supabase
+        .from("properties")
+        .select("*")
+        .eq("id", id)
+        .single();
+      
+      if (error) throw error;
+      if (data) {
+        setFormData({
+          title: data.title || "",
+          code: data.code || "",
+          description: data.description || "",
+          price: data.price?.toString() || "",
+          type: data.type || "Sale",
+          bedrooms: data.bedrooms?.toString() || "",
+          bathrooms: data.bathrooms?.toString() || "",
+          area: data.area?.toString() || "",
+          location: data.location || "",
+          video_url: data.video_url || "",
+          broker_name: data.broker_name || "",
+          broker_whatsapp: data.broker_whatsapp || "",
+        });
+        setExistingMainImage(data.main_image_url || "");
+        setExistingGallery(data.gallery_urls || []);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao carregar os dados do imóvel.");
+    } finally {
+      setFetching(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,11 +98,13 @@ export default function AddPropertyPage() {
           .getPublicUrl(filePath);
 
         finalImageUrl = publicUrlData.publicUrl;
+      } else {
+        finalImageUrl = existingMainImage;
       }
 
-      if (!finalImageUrl) throw new Error("A imagem de capa é obrigatória na criação do imóvel.");
+      if (!finalImageUrl && !existingMainImage) throw new Error("A imagem de capa é obrigatória.");
 
-      let finalGalleryUrls: string[] = [];
+      let finalGalleryUrls: string[] = [...existingGallery];
       if (galleryFiles.length > 0) {
         const uploadPromises = galleryFiles.map(async (file) => {
           const fileExt = file.name.split('.').pop();
@@ -71,28 +120,26 @@ export default function AddPropertyPage() {
         });
         
         const results = await Promise.all(uploadPromises);
-        finalGalleryUrls = results.filter((url) => url !== null) as string[];
+        const newUrls = results.filter((url) => url !== null) as string[];
+        finalGalleryUrls = [...finalGalleryUrls, ...newUrls];
       }
 
-      const { error } = await supabase.from("properties").insert([
-        {
-          title: formData.title,
-          code: formData.code,
-          description: formData.description,
-          price: parseFloat(formData.price),
-          type: formData.type,
-          status: "Available",
-          bedrooms: parseInt(formData.bedrooms) || 0,
-          bathrooms: parseInt(formData.bathrooms) || 0,
-          area: parseInt(formData.area) || 0,
-          location: formData.location,
-          main_image_url: finalImageUrl,
-          gallery_urls: finalGalleryUrls,
-          video_url: formData.video_url || null,
-          broker_name: formData.broker_name || null,
-          broker_whatsapp: formData.broker_whatsapp || null,
-        }
-      ]);
+      const { error } = await supabase.from("properties").update({
+        title: formData.title,
+        code: formData.code || null,
+        description: formData.description,
+        price: parseFloat(formData.price),
+        type: formData.type,
+        bedrooms: parseInt(formData.bedrooms) || 0,
+        bathrooms: parseInt(formData.bathrooms) || 0,
+        area: parseInt(formData.area) || 0,
+        location: formData.location,
+        main_image_url: finalImageUrl,
+        gallery_urls: finalGalleryUrls,
+        video_url: formData.video_url || null,
+        broker_name: formData.broker_name || null,
+        broker_whatsapp: formData.broker_whatsapp || null,
+      }).eq("id", id);
 
       if (error) {
         console.error(error);
@@ -112,15 +159,19 @@ export default function AddPropertyPage() {
     }
   }
 
+  if (fetching) {
+    return <div className="p-8 max-w-4xl mx-auto flex items-center justify-center min-h-[50vh]"><div className="animate-pulse text-lg font-medium text-neutral-500">Carregando imóvel...</div></div>;
+  }
+
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <div className="flex items-center gap-6 mb-10">
-        <Link href="/admin" className="p-3 bg-white border border-neutral-200 rounded-full hover:bg-neutral-800 transition-colors text-neutral-400">
+        <Link href="/admin" className="p-3 bg-white border border-neutral-200 rounded-full hover:bg-neutral-800 transition-colors hover:text-white text-neutral-400">
           <ArrowLeft size={20} />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-[#2C2C2C] tracking-tight font-serif">Novo Imóvel</h1>
-          <p className="text-neutral-600 mt-1">Preencha os detalhes para listar sua próxima propriedade de alto padrão.</p>
+          <h1 className="text-3xl font-bold text-[#2C2C2C] tracking-tight font-serif">Editar Imóvel</h1>
+          <p className="text-neutral-600 mt-1">Altere os dados da propriedade conforme necessário.</p>
         </div>
       </div>
 
@@ -289,9 +340,8 @@ export default function AddPropertyPage() {
           
           <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">Imagem de Capa (Upload)</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">Imagem de Capa (Opcional - deixe vazio p/ manter a atual)</label>
               <input 
-                required
                 type="file" 
                 accept="image/*"
                 className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3 text-neutral-800 focus:outline-none focus:border-hi-blue focus:ring-1 focus:ring-hi-blue transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-hi-blue file:text-white hover:file:bg-[#347Ab7] cursor-pointer"
@@ -301,10 +351,11 @@ export default function AddPropertyPage() {
                   }
                 }}
               />
+              {existingMainImage && <p className="text-sm mt-2 text-neutral-500">Imagem atual já enviada.</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">Fotos Adicionais da Galeria</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">Fotos Adicionais (Pula e mantém se não quiser add novas)</label>
               <input 
                 type="file" 
                 multiple
@@ -339,10 +390,10 @@ export default function AddPropertyPage() {
             disabled={loading}
             className="bg-hi-blue hover:bg-[#347Ab7] disabled:bg-blue-300 disabled:text-white text-white font-bold px-8 py-4 rounded-xl flex items-center gap-3 transition-all shadow-lg hover:shadow-blue-900/20 active:scale-95"
           >
-            {loading ? "Salvando Proprietário..." : (
+            {loading ? "Salvando Alterações..." : (
               <>
                 <Save size={22} />
-                Publicar Imóvel
+                Salvar Alterações
               </>
             )}
           </button>

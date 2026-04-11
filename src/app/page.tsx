@@ -1,8 +1,9 @@
-import { supabase, type Property } from "@/lib/supabase";
+import { supabase, type Property, type Project } from "@/lib/supabase";
 import { PropertyGrid } from "@/components/ui/PropertyGrid";
+import { ProjectGrid } from "@/components/ui/ProjectGrid";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
-import { Menu } from "lucide-react";
+import { Header } from "@/components/ui/Header";
 
 export const revalidate = 0; // Disable static rendering to always show fresh data
 
@@ -13,10 +14,12 @@ export default async function Home({
 }) {
   const query = searchParams.q?.toLowerCase() || "";
 
-  const { data: properties } = await supabase
-    .from("properties")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const [{ data: properties }, { data: projects }] = await Promise.all([
+    supabase.from("properties").select("*").order("created_at", { ascending: false }),
+    supabase.from("projects").select("*").order("created_at", { ascending: false })
+  ]);
+
+  const isMock = process.env.NODE_ENV === "development";
 
   // Fallback data if no supabase connection yet
   const displayProperties: Property[] = properties || [
@@ -48,52 +51,55 @@ export default async function Home({
     }
   ];
 
+  const displayProjects: Project[] = projects || (isMock ? [
+    {
+      id: "1",
+      title: "Residencial Horizonte Bairro Alto",
+      code: "LANC-001",
+      description: "Um empreendimento desenhado para transformar a skyline da cidade.",
+      price_starts_at: 450000,
+      status: "Launch",
+      stage: "Aprovação de Projeto",
+      location: "Bairro Alto, Curitiba - PR",
+      features: ["Rooftop Pool", "Academia"],
+      main_image_url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=2000&auto=format&fit=crop",
+      gallery_urls: [],
+      video_url: null,
+      created_at: new Date().toISOString()
+    }
+  ] : []);
+
   const filteredProperties = query
     ? displayProperties.filter((p) => {
       const titleMatch = p.title.toLowerCase().includes(query);
       const locationMatch = p.location && p.location.toLowerCase().includes(query);
       const descriptionMatch = p.description.toLowerCase().includes(query);
+      const codeMatch = p.code && p.code.toLowerCase().includes(query);
 
       // Match natural language for type
       const matchesSale = p.type === 'Sale' && (query.includes('venda') || query.includes('comprar'));
 
-      return titleMatch || locationMatch || descriptionMatch || matchesSale;
+      return titleMatch || locationMatch || descriptionMatch || codeMatch || matchesSale;
     })
     : displayProperties;
+
+  const filteredProjects = query
+    ? displayProjects.filter((p) => {
+      const titleMatch = p.title.toLowerCase().includes(query);
+      const locationMatch = p.location && p.location.toLowerCase().includes(query);
+      const codeMatch = p.code && p.code.toLowerCase().includes(query);
+      
+      const matchesEmpreendimento = query.includes('empreendimento') || query.includes('lançamento') || query.includes('obra');
+      
+      return titleMatch || locationMatch || codeMatch || matchesEmpreendimento;
+    })
+    : displayProjects;
 
   const salesProperties = filteredProperties.filter(p => p.type === 'Sale');
 
   return (
     <main className="min-h-screen">
-      {/* Navbar (Header) */}
-      <header className="absolute top-0 inset-x-0 z-50 bg-white shadow-md h-20 md:h-[90px] px-4 md:px-8 flex items-center justify-between">
-        {/* Logo */}
-        <div className="w-48 sm:w-60 md:w-72 h-full flex items-center justify-start py-2.5">
-          <img src="/logo.png" alt="Logo HI Imóveis" className="w-[110%] max-w-[110%] h-auto md:h-full object-contain object-left md:scale-[1.10] origin-left" />
-        </div>
-
-        {/* Desktop Links */}
-        <nav className="hidden lg:flex items-center gap-6 font-sans text-sm font-semibold text-neutral-800">
-          <a href="#" className="hover:text-[#d95d29] transition-colors">Sobre nós</a>
-          <a href="#venda" className="hover:text-[#d95d29] transition-colors">Imóveis</a>
-          <a href="#" className="hover:text-[#d95d29] transition-colors">Empreendimentos</a>
-          <a href="#" className="hover:text-[#d95d29] transition-colors">Contato</a>
-        </nav>
-
-        {/* Desktop Actions */}
-        <div className="hidden lg:flex items-center gap-4">
-          <a href="#" className="text-sm font-bold text-white bg-[#d95d29] hover:bg-[#b04a1f] px-6 py-2.5 rounded-sm transition-colors shadow-sm">
-            Anuncie Aqui
-          </a>
-        </div>
-
-        {/* Mobile Hamburger */}
-        <div className="lg:hidden flex items-center">
-          <button className="text-[#d95d29] p-2 hover:bg-neutral-100 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#d95d29]">
-            <Menu size={32} />
-          </button>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -132,6 +138,14 @@ export default async function Home({
           subtitle="Oportunidades exclusivas para aquisição do seu novo patrimônio."
           emptyMessage="Nenhum imóvel à venda encontrado no momento."
           properties={salesProperties}
+        />
+
+        <ProjectGrid
+          id="empreendimentos"
+          title="Empreendimentos Exclusivos"
+          subtitle="Explore lançamentos e projetos em construção ideais para investir ou morar."
+          emptyMessage="Nenhum empreendimento ativo no momento."
+          projects={filteredProjects}
         />
       </div>
 

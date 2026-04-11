@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { ArrowLeft, Save, Building, Image as ImageIcon, DollarSign, MapPin } from "lucide-react";
+import { ArrowLeft, Save, Building, Image as ImageIcon, DollarSign, MapPin, List } from "lucide-react";
 import Link from "next/link";
 
-export default function AddPropertyPage() {
+export default function AddProjectPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mainImageFile, setMainImageFile] = useState<File | null>(null);
@@ -15,12 +15,11 @@ export default function AddPropertyPage() {
     title: "",
     code: "",
     description: "",
-    price: "",
-    type: "Sale",
-    bedrooms: "",
-    bathrooms: "",
-    area: "",
+    price_starts_at: "",
+    status: "Launch",
+    stage: "",
     location: "",
+    features: "",
     video_url: "",
     broker_name: "",
     broker_whatsapp: "",
@@ -74,18 +73,18 @@ export default function AddPropertyPage() {
         finalGalleryUrls = results.filter((url) => url !== null) as string[];
       }
 
-      const { error } = await supabase.from("properties").insert([
+      const featuresArray = formData.features.split(',').map(f => f.trim()).filter(Boolean);
+
+      const { error } = await supabase.from("projects").insert([
         {
           title: formData.title,
-          code: formData.code,
+          code: formData.code || null,
           description: formData.description,
-          price: parseFloat(formData.price),
-          type: formData.type,
-          status: "Available",
-          bedrooms: parseInt(formData.bedrooms) || 0,
-          bathrooms: parseInt(formData.bathrooms) || 0,
-          area: parseInt(formData.area) || 0,
+          price_starts_at: parseFloat(formData.price_starts_at) || 0,
+          status: formData.status,
+          stage: formData.stage || null,
           location: formData.location,
+          features: featuresArray,
           main_image_url: finalImageUrl,
           gallery_urls: finalGalleryUrls,
           video_url: formData.video_url || null,
@@ -99,7 +98,7 @@ export default function AddPropertyPage() {
         if (process.env.NODE_ENV === "development") {
           alert(`Erro (Em dev, check o console): ${error.message}`);
         } else {
-          alert("Erro ao salvar o imóvel. Verifique a configuração do banco de dados.");
+          alert("Erro ao salvar o empreendimento. Verifique a configuração do banco de dados.");
         }
       } else {
         router.push("/admin");
@@ -119,8 +118,8 @@ export default function AddPropertyPage() {
           <ArrowLeft size={20} />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-[#2C2C2C] tracking-tight font-serif">Novo Imóvel</h1>
-          <p className="text-neutral-600 mt-1">Preencha os detalhes para listar sua próxima propriedade de alto padrão.</p>
+          <h1 className="text-3xl font-bold text-[#2C2C2C] tracking-tight font-serif">Novo Empreendimento</h1>
+          <p className="text-neutral-600 mt-1">Cadastre um novo lançamento ou empreendimento em construção.</p>
         </div>
       </div>
 
@@ -171,7 +170,7 @@ export default function AddPropertyPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Valor (R$)</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Valor "A partir de" (R$)</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                     <DollarSign size={18} className="text-neutral-500" />
@@ -183,20 +182,21 @@ export default function AddPropertyPage() {
                     min="0"
                     className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl pl-10 p-3.5 text-neutral-800 placeholder-neutral-400 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                     placeholder="1500000"
-                    value={formData.price}
-                    onChange={(e) => setFormData({...formData, price: e.target.value})}
+                    value={formData.price_starts_at}
+                    onChange={(e) => setFormData({...formData, price_starts_at: e.target.value})}
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Modalidade</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Status do Empreendimento</label>
                 <select 
                   className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 focus:outline-none focus:border-hi-blue focus:ring-1 focus:ring-hi-blue transition-all appearance-none cursor-pointer"
-                  value={formData.type}
-                  onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  value={formData.status}
+                  onChange={(e) => setFormData({...formData, status: e.target.value})}
                 >
-                  <option value="Sale">Venda (Sale)</option>
-                  <option value="Rent">Aluguel (Rent)</option>
+                  <option value="Launch">Lançamento</option>
+                  <option value="InProgress">Obras em Andamento</option>
+                  <option value="Ready">Pronto para Morar</option>
                 </select>
               </div>
             </div>
@@ -218,33 +218,31 @@ export default function AddPropertyPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Quartos</label>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Estágio de Obra (Opcional)</label>
                 <input 
-                  type="number" min="0" required
+                  type="text"
                   className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 placeholder-neutral-400 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  value={formData.bedrooms}
-                  onChange={(e) => setFormData({...formData, bedrooms: e.target.value})}
+                  placeholder="Ex: Fase 3, 60% Concluído..."
+                  value={formData.stage}
+                  onChange={(e) => setFormData({...formData, stage: e.target.value})}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Banheiros</label>
-                <input 
-                  type="number" min="0" required
-                  className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 placeholder-neutral-400 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  value={formData.bathrooms}
-                  onChange={(e) => setFormData({...formData, bathrooms: e.target.value})}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">Área (m²)</label>
-                <input 
-                  type="number" min="0" required
-                  className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 placeholder-neutral-400 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  value={formData.area}
-                  onChange={(e) => setFormData({...formData, area: e.target.value})}
-                />
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Comodidades/Características</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <List size={18} className="text-neutral-500" />
+                  </div>
+                  <input 
+                    type="text"
+                    className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl pl-10 p-3.5 text-neutral-800 placeholder-neutral-400 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    placeholder="Piscina, Academia, 2 vagas (separado por vírgulas)"
+                    value={formData.features}
+                    onChange={(e) => setFormData({...formData, features: e.target.value})}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -342,7 +340,7 @@ export default function AddPropertyPage() {
             {loading ? "Salvando Proprietário..." : (
               <>
                 <Save size={22} />
-                Publicar Imóvel
+                Publicar Empreendimento
               </>
             )}
           </button>

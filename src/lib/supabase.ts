@@ -27,6 +27,7 @@ export const supabase = createClient(
 export type Property = {
   id: string;
   title: string;
+  code?: string;
   description: string;
   price: number;
   type: 'Sale' | 'Rent';
@@ -35,6 +36,24 @@ export type Property = {
   area?: number;
   location?: string;
   status: 'Available' | 'Sold';
+  main_image_url: string;
+  gallery_urls: string[] | null;
+  video_url: string | null;
+  broker_name?: string | null;
+  broker_whatsapp?: string | null;
+  created_at: string;
+};
+
+export type Project = {
+  id: string;
+  title: string;
+  code?: string;
+  description: string;
+  price_starts_at: number;
+  status: 'Launch' | 'InProgress' | 'Ready';
+  stage?: string;
+  location: string;
+  features: string[];
   main_image_url: string;
   gallery_urls: string[] | null;
   video_url: string | null;

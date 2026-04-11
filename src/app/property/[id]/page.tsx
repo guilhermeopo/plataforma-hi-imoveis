@@ -62,9 +62,16 @@ export default async function PropertyDetails({ params }: { params: { id: string
         <div className="hidden md:block absolute bottom-0 left-0 w-full z-20 p-8 md:p-16 max-w-7xl mx-auto animate-fade-in-up">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="max-w-3xl">
-              <span className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-widest text-hi-orange uppercase bg-white/90 border border-white/20 rounded-full backdrop-blur-md shadow-sm">
-                {displayProperty.type === 'Sale' ? 'Para Venda' : 'Para Aluguel'}
-              </span>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="inline-block px-3 py-1 text-xs font-semibold tracking-widest text-[#d95d29] uppercase bg-white/90 border border-white/20 rounded-full backdrop-blur-md shadow-sm">
+                  {displayProperty.type === 'Sale' ? 'Para Venda' : 'Para Aluguel'}
+                </span>
+                {displayProperty.code && (
+                  <span className="inline-block px-3 py-1 text-xs font-semibold tracking-widest text-neutral-700 uppercase bg-white/90 border border-white/20 rounded-full backdrop-blur-md shadow-sm flex items-center gap-1">
+                    CÓDIGO: {displayProperty.code}
+                  </span>
+                )}
+              </div>
               <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-2 leading-tight drop-shadow-md font-serif">
                 {displayProperty.title}
               </h1>
@@ -94,9 +101,16 @@ export default async function PropertyDetails({ params }: { params: { id: string
       <div className="md:hidden relative z-30 px-4 -mt-12 mb-8 max-w-lg mx-auto animate-fade-in-up">
         <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-neutral-100 flex flex-col gap-4">
           <div>
-            <span className="inline-block px-3 py-1 mb-3 text-[10px] font-bold tracking-widest text-hi-orange uppercase bg-hi-orange/10 rounded-full">
-              {displayProperty.type === 'Sale' ? 'Para Venda' : 'Para Aluguel'}
-            </span>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-block px-3 py-1 text-[10px] font-bold tracking-widest text-[#d95d29] uppercase bg-[#d95d29]/10 rounded-full">
+                {displayProperty.type === 'Sale' ? 'Para Venda' : 'Para Aluguel'}
+              </span>
+              {displayProperty.code && (
+                <span className="inline-block px-3 py-1 text-[10px] font-bold tracking-widest text-neutral-600 uppercase bg-neutral-100 border border-neutral-200 rounded-full">
+                  CÓD: {displayProperty.code}
+                </span>
+              )}
+            </div>
             <h1 className="text-2xl font-bold text-[#2C2C2C] leading-snug font-serif">
               {displayProperty.title}
             </h1>

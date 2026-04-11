@@ -40,6 +40,45 @@ CREATE POLICY "Enable delete for all users"
   ON public.properties FOR DELETE
   USING ( true );
 
+-- Create projects table
+CREATE TABLE public.projects (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  title text NOT NULL,
+  code text,
+  description text NOT NULL,
+  price_starts_at numeric NOT NULL,
+  status text NOT NULL DEFAULT 'Launch' CHECK (status IN ('Launch', 'InProgress', 'Ready')),
+  stage text,
+  location text NOT NULL,
+  features text[] DEFAULT '{}',
+  main_image_url text NOT NULL,
+  gallery_urls text[] DEFAULT '{}',
+  video_url text,
+  broker_name text,
+  broker_whatsapp text,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Row Level Security for Projects
+ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Projects are viewable by everyone."
+  ON public.projects FOR SELECT
+  USING ( true );
+
+CREATE POLICY "Enable insert projects for all users"
+  ON public.projects FOR INSERT
+  WITH CHECK ( true );
+
+CREATE POLICY "Enable update projects for all users"
+  ON public.projects FOR UPDATE
+  USING ( true )
+  WITH CHECK ( true );
+
+CREATE POLICY "Enable delete projects for all users"
+  ON public.projects FOR DELETE
+  USING ( true );
+
 -- Storage Setup Instructions:
 -- 1. Create a public bucket called 'properties' in Supabase Storage
 -- 2. Run the policies below in SQL Editor to enable access
