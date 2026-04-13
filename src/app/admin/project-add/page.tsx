@@ -310,11 +310,16 @@ export default function AddProjectPage() {
                 className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3 text-neutral-800 focus:outline-none focus:border-hi-blue focus:ring-1 focus:ring-hi-blue transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-neutral-800 file:text-neutral-200 hover:file:bg-neutral-700 cursor-pointer"
                 onChange={(e) => {
                   if (e.target.files) {
-                    setGalleryFiles(Array.from(e.target.files));
+                    setGalleryFiles(prev => [...prev, ...Array.from(e.target.files!)]);
                   }
                 }}
               />
-              <p className="text-xs text-neutral-500 mt-2">{galleryFiles.length} foto(s) selecionada(s) para a galeria.</p>
+              <div className="flex items-center gap-4 mt-2">
+                <p className="text-xs text-neutral-500">{galleryFiles.length} foto(s) selecionada(s) para a galeria (você pode selecionar várias clicando seguidamente).</p>
+                {galleryFiles.length > 0 && (
+                  <button type="button" onClick={() => setGalleryFiles([])} className="text-xs text-red-500 hover:underline">Limpar Galeria</button>
+                )}
+              </div>
             </div>
 
             <div>
