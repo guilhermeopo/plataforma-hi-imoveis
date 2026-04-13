@@ -58,7 +58,8 @@ export function SearchBar() {
           onChange={(e) => setTerm(e.target.value)}
         >
           <option value="">O que deseja?</option>
-          <option value="venda">Comprar</option>
+          <option value="venda">Imóveis à Venda</option>
+          <option value="empreendimento">Empreendimentos</option>
         </select>
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
       </div>
@@ -94,12 +95,7 @@ export function SearchBar() {
         </div>
       </div>
 
-      <div className="relative">
-        <select className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer">
-          <option value="">Empreendimento</option>
-        </select>
-        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
-      </div>
+
 
       <button type="submit" className="bg-[#FFB800] hover:bg-[#E5A500] text-white py-3 rounded-sm font-bold transition-colors mt-2 text-[15px] shadow-sm">
         BUSCAR
