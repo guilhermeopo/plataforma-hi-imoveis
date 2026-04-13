@@ -70,9 +70,16 @@ export function ProjectCard({ project }: { project: Project }) {
 
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-2">
-          <span className="text-xs font-semibold text-[#d95d29] uppercase tracking-wider flex items-center gap-1">
-            <Building2 size={14} /> Empreendimento
-          </span>
+          <div className="flex flex-col gap-1 items-start">
+            <span className="text-xs font-semibold text-[#d95d29] uppercase tracking-wider flex items-center gap-1">
+              <Building2 size={14} /> Empreendimento
+            </span>
+            {project.code && (
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest text-neutral-500 bg-neutral-100 border border-neutral-200">
+                {project.code}
+              </span>
+            )}
+          </div>
         </div>
         <h3 className="text-xl font-bold text-neutral-800 leading-snug line-clamp-2 mt-1 mb-2 group-hover:text-[#d95d29] transition-colors font-serif">
           {project.title}
@@ -83,13 +90,27 @@ export function ProjectCard({ project }: { project: Project }) {
             <span className="truncate">{project.location}</span>
           </div>
         )}
-        <div className="mt-auto pt-4 border-t border-neutral-100 mt-4 flex flex-col">
+        <div className="mt-auto pt-4 border-t border-neutral-100 flex flex-col">
+          {project.features && project.features.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {project.features.slice(0, 3).map(feature => (
+                <span key={feature} className="text-[10px] px-2 py-1 bg-neutral-100 text-neutral-600 font-medium rounded-md border border-neutral-200/60 truncate max-w-[100px]">
+                  {feature}
+                </span>
+              ))}
+              {project.features.length > 3 && (
+                <span className="text-[10px] px-2 py-1 bg-neutral-100 text-neutral-500 font-medium rounded-md border border-neutral-200/60">
+                  +{project.features.length - 3}
+                </span>
+              )}
+            </div>
+          )}
           <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mb-0.5">A partir de</span>
           <span className="text-xl font-extrabold text-[#d95d29] tracking-tight">
             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(project.price_starts_at)}
           </span>
           {project.stage && (
-             <span className="text-xs text-neutral-500 font-medium mt-1.5">{project.stage}</span>
+             <span className="text-xs text-[#2C2C2C] font-semibold mt-1.5 bg-[#FFB800]/10 px-2.5 py-1 rounded-md w-fit border border-[#FFB800]/20">{project.stage}</span>
           )}
         </div>
       </div>

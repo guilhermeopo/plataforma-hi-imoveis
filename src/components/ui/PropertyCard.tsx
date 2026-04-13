@@ -68,9 +68,16 @@ export function PropertyCard({ property }: { property: Property }) {
 
       <div className="p-5 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-2">
-          <span className="text-xs font-semibold text-hi-orange uppercase tracking-wider">
-            {property.type === 'Sale' ? 'Venda' : 'Aluguel'}
-          </span>
+          <div className="flex flex-col gap-1 items-start">
+            <span className="text-xs font-semibold text-hi-orange uppercase tracking-wider">
+              {property.type === 'Sale' ? 'Venda' : 'Aluguel'}
+            </span>
+            {property.code && (
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest text-neutral-500 bg-neutral-100 border border-neutral-200">
+                {property.code}
+              </span>
+            )}
+          </div>
           <span className="text-lg font-bold text-hi-blue tracking-tight">
             {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(property.price)}
           </span>
