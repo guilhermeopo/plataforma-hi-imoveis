@@ -11,10 +11,9 @@ export const revalidate = 0; // Disable static rendering to always show fresh da
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { q?: string; tipo?: string }
+  searchParams: { q?: string }
 }) {
   const query = searchParams.q?.toLowerCase() || "";
-  const tipo = searchParams.tipo || ""; // "imoveis" | "empreendimentos" | ""
 
   const [{ data: properties }, { data: projects }] = await Promise.all([
     supabase.from("properties").select("*").order("created_at", { ascending: false }),
@@ -132,27 +131,23 @@ export default async function Home({
         </div>
       </section>
 
-      {/* Showcase Grids (Filtrados por tipo) */}
+      {/* Showcase Grids (Agora Paginados) */}
       <div className="bg-[#F1F1F1]">
-        {tipo !== "empreendimentos" && (
-          <PropertyGrid
-            id="venda"
-            title="Imóveis à Venda"
-            subtitle="Oportunidades exclusivas para aquisição do seu novo patrimônio."
-            emptyMessage="Nenhum imóvel à venda encontrado no momento."
-            properties={salesProperties}
-          />
-        )}
+        <PropertyGrid
+          id="venda"
+          title="Imóveis à Venda"
+          subtitle="Oportunidades exclusivas para aquisição do seu novo patrimônio."
+          emptyMessage="Nenhum imóvel à venda encontrado no momento."
+          properties={salesProperties}
+        />
 
-        {tipo !== "imoveis" && (
-          <ProjectGrid
-            id="empreendimentos"
-            title="Empreendimentos Exclusivos"
-            subtitle="Explore lançamentos e projetos em construção ideais para investir ou morar."
-            emptyMessage="Nenhum empreendimento ativo no momento."
-            projects={filteredProjects}
-          />
-        )}
+        <ProjectGrid
+          id="empreendimentos"
+          title="Empreendimentos Exclusivos"
+          subtitle="Explore lançamentos e projetos em construção ideais para investir ou morar."
+          emptyMessage="Nenhum empreendimento ativo no momento."
+          projects={filteredProjects}
+        />
       </div>
 
       {/* Footer */}
