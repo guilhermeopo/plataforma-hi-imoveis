@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { LayoutDashboard, PlusCircle, LogOut, Home } from "lucide-react";
+import { LayoutDashboard, PlusCircle, LogOut, Home, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -35,6 +35,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <Link href="/admin/add" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-50 text-neutral-600 hover:text-hi-blue font-medium transition-colors">
             <PlusCircle size={20} />
             Adicionar Novo
+          </Link>
+          <Link href="/admin/options" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-50 text-neutral-600 hover:text-hi-blue font-medium transition-colors">
+            <Settings size={20} />
+            Configurações (Bairros e Tipos)
           </Link>
           <hr className="border-neutral-200 my-4" />
           <Link href="/" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-neutral-50 text-neutral-600 hover:text-hi-blue font-medium transition-colors">

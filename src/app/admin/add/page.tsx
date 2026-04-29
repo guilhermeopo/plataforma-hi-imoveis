@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { ArrowLeft, Save, Building, Image as ImageIcon, DollarSign, MapPin } from "lucide-react";
@@ -21,10 +21,26 @@ export default function AddPropertyPage() {
     bathrooms: "",
     area: "",
     location: "",
+    neighborhood: "",
+    property_type: "",
     video_url: "",
     broker_name: "",
     broker_whatsapp: "",
+    is_featured: false,
   });
+
+  const [options, setOptions] = useState<{ neighborhoods: string[], propertyTypes: string[] }>({ neighborhoods: [], propertyTypes: [] });
+
+  useEffect(() => {
+    supabase.from("system_options").select("*").then(({ data }) => {
+      if (data) {
+        setOptions({
+          neighborhoods: data.filter(d => d.type === 'neighborhood').map(d => d.value).sort(),
+          propertyTypes: data.filter(d => d.type === 'property_type').map(d => d.value).sort()
+        });
+      }
+    });
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -86,11 +102,14 @@ export default function AddPropertyPage() {
           bathrooms: parseInt(formData.bathrooms) || 0,
           area: parseInt(formData.area) || 0,
           location: formData.location,
+          neighborhood: formData.neighborhood || null,
+          property_type: formData.property_type || null,
           main_image_url: finalImageUrl,
           gallery_urls: finalGalleryUrls,
           video_url: formData.video_url || null,
           broker_name: formData.broker_name || null,
           broker_whatsapp: formData.broker_whatsapp || null,
+          is_featured: formData.is_featured,
         }
       ]);
 
@@ -218,6 +237,31 @@ export default function AddPropertyPage() {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Bairro</label>
+                <select 
+                  className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none cursor-pointer"
+                  value={formData.neighborhood}
+                  onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
+                >
+                  <option value="">Selecione o Bairro...</option>
+                  {options.neighborhoods.map(n => <option key={n} value={n}>{n}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Tipo de Imóvel</label>
+                <select 
+                  className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none cursor-pointer"
+                  value={formData.property_type}
+                  onChange={(e) => setFormData({...formData, property_type: e.target.value})}
+                >
+                  <option value="">Selecione o Tipo...</option>
+                  {options.propertyTypes.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+            </div>
+
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">Quartos</label>
@@ -246,6 +290,20 @@ export default function AddPropertyPage() {
                   onChange={(e) => setFormData({...formData, area: e.target.value})}
                 />
               </div>
+            </div>
+
+            <div className="pt-4 border-t border-neutral-100 mt-2">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  className="w-5 h-5 rounded border-neutral-300 text-hi-blue focus:ring-hi-blue cursor-pointer"
+                  checked={formData.is_featured}
+                  onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
+                />
+                <span className="text-sm font-semibold text-neutral-800">
+                  Destaque: Exibir este imóvel na "Nossa Seleção Especial" (Carrossel Inicial)
+                </span>
+              </label>
             </div>
           </div>
         </div>

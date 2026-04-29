@@ -4,6 +4,7 @@ import { ProjectGrid } from "@/components/ui/ProjectGrid";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { Header } from "@/components/ui/Header";
+import { PropertyCarousel } from "@/components/ui/PropertyCarousel";
 import Image from "next/image";
 
 export const revalidate = 0; // Disable static rendering to always show fresh data
@@ -11,18 +12,35 @@ export const revalidate = 0; // Disable static rendering to always show fresh da
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { q?: string }
+  searchParams: { q?: string, intent?: string, location?: string, type?: string, project?: string, minPrice?: string, maxPrice?: string, code?: string }
 }) {
   const query = searchParams.q?.toLowerCase() || "";
+  const intent = searchParams.intent || "";
+  const searchLocation = searchParams.location?.toLowerCase() || "";
+  const searchType = searchParams.type?.toLowerCase() || "";
+  const minPrice = searchParams.minPrice ? Number(searchParams.minPrice) : 0;
+  const maxPrice = searchParams.maxPrice ? Number(searchParams.maxPrice) : Infinity;
+  const code = searchParams.code?.toLowerCase() || "";
 
   const [{ data: properties }, { data: projects }] = await Promise.all([
     supabase.from("properties").select("*").order("created_at", { ascending: false }),
     supabase.from("projects").select("*").order("created_at", { ascending: false })
   ]);
 
+  const allLocationsRaw = [
+    ...(properties || []).map(p => p.neighborhood),
+    ...(projects || []).map(p => p.neighborhood)
+  ].filter(Boolean) as string[];
+  const allLocations = Array.from(new Set(allLocationsRaw)).sort();
+
+  const allTypesRaw = [
+    ...(properties || []).map(p => p.property_type),
+    ...(projects || []).map(p => p.property_type)
+  ].filter(Boolean) as string[];
+  const allTypes = Array.from(new Set(allTypesRaw)).sort();
+
   const isMock = process.env.NODE_ENV === "development";
 
-  // Fallback data if no supabase connection yet
   const displayProperties: Property[] = properties || [
     {
       id: "1",
@@ -70,33 +88,86 @@ export default async function Home({
     }
   ] : []);
 
-  const filteredProperties = query
-    ? displayProperties.filter((p) => {
+  const allProjectTitlesRaw = displayProjects.map(p => p.title).filter(Boolean);
+  const allProjectTitles = Array.from(new Set(allProjectTitlesRaw)).sort();
+
+  const searchProject = searchParams.project?.toLowerCase() || "";
+
+  const filteredProperties = displayProperties.filter((p) => {
+    if (code) return p.code?.toLowerCase().includes(code);
+    
+    if (searchProject) return false; 
+    
+    if (intent === 'empreendimento') return false; 
+    if (intent === 'venda' && p.type !== 'Sale') return false;
+
+    if (searchLocation) {
+      const pLoc = p.location?.toLowerCase() || '';
+      const pNeigh = p.neighborhood?.toLowerCase() || '';
+      if (!pLoc.includes(searchLocation) && !pNeigh.includes(searchLocation)) return false;
+    }
+
+    if (searchType) {
+      const pType = p.property_type?.toLowerCase() || '';
+      const pTitle = p.title.toLowerCase();
+      const pDesc = p.description.toLowerCase();
+      if (!pType.includes(searchType) && !pTitle.includes(searchType) && !pDesc.includes(searchType)) return false;
+    }
+
+    if (minPrice && p.price < minPrice) return false;
+    if (maxPrice !== Infinity && p.price > maxPrice) return false;
+
+    if (query) {
       const titleMatch = p.title.toLowerCase().includes(query);
       const locationMatch = p.location && p.location.toLowerCase().includes(query);
       const descriptionMatch = p.description.toLowerCase().includes(query);
       const codeMatch = p.code && p.code.toLowerCase().includes(query);
-
-      // Match natural language for type
       const matchesSale = p.type === 'Sale' && (query.includes('venda') || query.includes('comprar'));
+      if (!titleMatch && !locationMatch && !descriptionMatch && !codeMatch && !matchesSale) return false;
+    }
 
-      return titleMatch || locationMatch || descriptionMatch || codeMatch || matchesSale;
-    })
-    : displayProperties;
+    return true;
+  });
 
-  const filteredProjects = query
-    ? displayProjects.filter((p) => {
+  const filteredProjects = displayProjects.filter((p) => {
+    if (code) return p.code?.toLowerCase().includes(code);
+
+    if (intent === 'venda') return false; 
+    
+    if (searchLocation) {
+      const pLoc = p.location?.toLowerCase() || '';
+      const pNeigh = p.neighborhood?.toLowerCase() || '';
+      if (!pLoc.includes(searchLocation) && !pNeigh.includes(searchLocation)) return false;
+    }
+    
+    if (searchType) {
+      const pType = p.property_type?.toLowerCase() || '';
+      const pTitle = p.title.toLowerCase();
+      const pDesc = p.description.toLowerCase();
+      if (!pType.includes(searchType) && !pTitle.includes(searchType) && !pDesc.includes(searchType)) return false;
+    }
+    
+    if (minPrice && p.price_starts_at < minPrice) return false;
+    if (maxPrice !== Infinity && p.price_starts_at > maxPrice) return false;
+
+    if (searchProject && p.title.toLowerCase() !== searchProject) return false;
+
+    if (query) {
       const titleMatch = p.title.toLowerCase().includes(query);
       const locationMatch = p.location && p.location.toLowerCase().includes(query);
       const codeMatch = p.code && p.code.toLowerCase().includes(query);
-      
       const matchesEmpreendimento = query.includes('empreendimento') || query.includes('lançamento') || query.includes('obra');
-      
-      return titleMatch || locationMatch || codeMatch || matchesEmpreendimento;
-    })
-    : displayProjects;
+      if (!titleMatch && !locationMatch && !codeMatch && !matchesEmpreendimento) return false;
+    }
+
+    return true;
+  });
 
   const salesProperties = filteredProperties.filter(p => p.type === 'Sale');
+
+  const carouselProperties = displayProperties.filter(p => p.is_featured).length > 0 
+    ? displayProperties.filter(p => p.is_featured) 
+    : displayProperties.slice(0, 8);
 
   return (
     <main className="min-h-screen">
@@ -127,31 +198,46 @@ export default async function Home({
           {/* Frase Principal Estilizada */}
 
           {/* Search Bar */}
-          <SearchBar />
+          <SearchBar neighborhoods={allLocations} propertyTypes={allTypes} projectTitles={allProjectTitles} />
         </div>
       </section>
 
       {/* Showcase Grids (Agora Paginados) */}
       <div className="bg-[#F1F1F1]">
-        <PropertyGrid
-          id="venda"
-          title="Imóveis à Venda"
-          subtitle="Oportunidades exclusivas para aquisição do seu novo patrimônio."
-          emptyMessage="Nenhum imóvel à venda encontrado no momento."
-          properties={salesProperties}
-        />
 
-        <ProjectGrid
-          id="empreendimentos"
-          title="Empreendimentos Exclusivos"
-          subtitle="Explore lançamentos e projetos em construção ideais para investir ou morar."
-          emptyMessage="Nenhum empreendimento ativo no momento."
-          projects={filteredProjects}
-        />
+
+        {intent !== 'empreendimento' && (
+          <PropertyGrid
+            id="venda"
+            title="Imóveis à Venda"
+            subtitle="Oportunidades exclusivas para aquisição do seu novo patrimônio."
+            emptyMessage="Nenhum imóvel à venda encontrado no momento com estes critérios."
+            properties={salesProperties}
+          />
+        )}
+
+        {intent !== 'venda' && (
+          <ProjectGrid
+            id="empreendimentos"
+            title="Empreendimentos Exclusivos"
+            subtitle="Explore lançamentos e projetos em construção ideais para investir ou morar."
+            emptyMessage="Nenhum empreendimento ativo encontrado com estes critérios."
+            projects={filteredProjects}
+          />
+        )}
+
+        <div className="py-10">
+          <PropertyCarousel 
+            properties={carouselProperties} 
+            titleDark="Nossa" 
+            titleRed="Seleção Especial" 
+            subtitle="Confira as oportunidades que separamos para você." 
+          />
+        </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-white py-16 border-t border-neutral-200 mt-20">
+      <footer className="py-16 border-t border-neutral-200 mt-20" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start">
             <div className="flex items-center gap-3 mb-4">

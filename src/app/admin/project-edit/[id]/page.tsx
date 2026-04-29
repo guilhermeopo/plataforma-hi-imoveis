@@ -23,6 +23,8 @@ export default function EditProjectPage() {
     status: "Launch",
     stage: "",
     location: "",
+    neighborhood: "",
+    property_type: "",
     features: "",
     video_url: "",
     broker_name: "",
@@ -30,6 +32,19 @@ export default function EditProjectPage() {
   });
   const [existingMainImage, setExistingMainImage] = useState("");
   const [existingGallery, setExistingGallery] = useState<string[]>([]);
+
+  const [options, setOptions] = useState<{ neighborhoods: string[], propertyTypes: string[] }>({ neighborhoods: [], propertyTypes: [] });
+
+  useEffect(() => {
+    supabase.from("system_options").select("*").then(({ data }) => {
+      if (data) {
+        setOptions({
+          neighborhoods: data.filter(d => d.type === 'neighborhood').map(d => d.value).sort(),
+          propertyTypes: data.filter(d => d.type === 'property_type').map(d => d.value).sort()
+        });
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -56,7 +71,9 @@ export default function EditProjectPage() {
           status: data.status || "Launch",
           stage: data.stage || "",
           location: data.location || "",
-          features: data.features?.join(', ') || "",
+          neighborhood: data.neighborhood || "",
+          property_type: data.property_type || "",
+          features: data.features ? data.features.join(", ") : "",
           video_url: data.video_url || "",
           broker_name: data.broker_name || "",
           broker_whatsapp: data.broker_whatsapp || "",
@@ -133,6 +150,8 @@ export default function EditProjectPage() {
         status: formData.status,
         stage: formData.stage || null,
         location: formData.location,
+        neighborhood: formData.neighborhood || null,
+        property_type: formData.property_type || null,
         features: featuresArray,
         main_image_url: finalImageUrl,
         gallery_urls: finalGalleryUrls,
@@ -267,6 +286,31 @@ export default function EditProjectPage() {
                   value={formData.location}
                   onChange={(e) => setFormData({...formData, location: e.target.value})}
                 />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Bairro</label>
+                <select 
+                  className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none cursor-pointer"
+                  value={formData.neighborhood}
+                  onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
+                >
+                  <option value="">Selecione o Bairro...</option>
+                  {options.neighborhoods.map(n => <option key={n} value={n}>{n}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Tipo de Imóvel</label>
+                <select 
+                  className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none cursor-pointer"
+                  value={formData.property_type}
+                  onChange={(e) => setFormData({...formData, property_type: e.target.value})}
+                >
+                  <option value="">Selecione o Tipo...</option>
+                  {options.propertyTypes.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
               </div>
             </div>
 

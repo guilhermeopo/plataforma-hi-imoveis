@@ -4,16 +4,43 @@ import { useState } from "react";
 import { Search, ChevronDown } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export function SearchBar() {
+export function SearchBar({ 
+  neighborhoods = [], 
+  propertyTypes = [],
+  projectTitles = []
+}: { 
+  neighborhoods?: string[], 
+  propertyTypes?: string[],
+  projectTitles?: string[]
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [term, setTerm] = useState(searchParams.get("q") || "");
+  const [intent, setIntent] = useState(searchParams.get("intent") || "");
+  const [location, setLocation] = useState(searchParams.get("location") || "");
+  const [type, setType] = useState(searchParams.get("type") || "");
+  const [projectTitle, setProjectTitle] = useState(searchParams.get("project") || "");
+  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
+  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
+  const [code, setCode] = useState(searchParams.get("code") || "");
   const [searchMode, setSearchMode] = useState<"avancada" | "codigo">("avancada");
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
-    if (term.trim()) {
-      router.push(`/?q=${encodeURIComponent(term.trim())}`);
+    const params = new URLSearchParams();
+
+    if (searchMode === "codigo") {
+      if (code.trim()) params.append("code", code.trim());
+    } else {
+      if (intent) params.append("intent", intent);
+      if (location) params.append("location", location);
+      if (type) params.append("type", type);
+      if (projectTitle) params.append("project", projectTitle);
+      if (minPrice) params.append("minPrice", minPrice);
+      if (maxPrice) params.append("maxPrice", maxPrice);
+    }
+
+    if (params.toString()) {
+      router.push(`/?${params.toString()}`);
     } else {
       router.push(`/`);
     }
@@ -21,7 +48,7 @@ export function SearchBar() {
 
   if (searchMode === "codigo") {
     return (
-      <form onSubmit={handleSearch} className="mt-8 max-w-sm w-full mx-auto bg-white border border-black p-6 rounded-lg shadow-xl flex flex-col gap-4 text-left">
+      <form onSubmit={handleSearch} className="mt-8 max-w-sm w-full mx-auto border border-black p-6 rounded-lg shadow-xl flex flex-col gap-4 text-left" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div>
           <label className="block text-sm font-semibold text-neutral-700 mb-2">Digite o Código do Imóvel</label>
           <div className="relative">
@@ -32,8 +59,8 @@ export function SearchBar() {
               type="text"
               placeholder="Ex: REF-1020"
               className="w-full border border-neutral-200 text-neutral-800 py-3 pl-10 pr-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] uppercase"
-              value={term}
-              onChange={(e) => setTerm(e.target.value.toUpperCase())}
+              value={code}
+              onChange={(e) => setCode(e.target.value.toUpperCase())}
             />
           </div>
         </div>
@@ -50,12 +77,12 @@ export function SearchBar() {
   }
 
   return (
-    <form onSubmit={handleSearch} className="mt-8 max-w-sm w-full mx-auto bg-white border border-black p-6 rounded-lg shadow-xl flex flex-col gap-4 text-left">
+    <form onSubmit={handleSearch} className="mt-8 max-w-sm w-full mx-auto border border-black p-6 rounded-lg shadow-xl flex flex-col gap-4 text-left" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
       <div className="relative">
         <select 
           className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer"
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
+          value={intent}
+          onChange={(e) => setIntent(e.target.value)}
         >
           <option value="">O que deseja?</option>
           <option value="venda">Imóveis à Venda</option>
@@ -65,15 +92,37 @@ export function SearchBar() {
       </div>
 
       <div className="relative">
-        <select className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer">
-          <option value="">Bairro</option>
+        <select 
+          className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+        >
+          <option value="">Todos os Bairros</option>
+          {neighborhoods.map(n => <option key={`n-${n}`} value={n}>{n}</option>)}
         </select>
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
       </div>
 
       <div className="relative">
-        <select className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer">
-          <option value="">Tipos de imóvel</option>
+        <select 
+          className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+        >
+          <option value="">Todos os Tipos</option>
+          {propertyTypes.map(t => <option key={`t-${t}`} value={t}>{t}</option>)}
+        </select>
+        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
+      </div>
+
+      <div className="relative">
+        <select 
+          className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer"
+          value={projectTitle}
+          onChange={(e) => setProjectTitle(e.target.value)}
+        >
+          <option value="">Todos os Empreendimentos</option>
+          {projectTitles.map(p => <option key={p} value={p}>{p}</option>)}
         </select>
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
       </div>
@@ -84,6 +133,8 @@ export function SearchBar() {
             type="number"
             placeholder="Valor mín. (R$)"
             className="w-full border border-neutral-200 text-neutral-800 py-3 px-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm placeholder-neutral-500"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
           />
         </div>
         <div className="relative flex-1">
@@ -91,6 +142,8 @@ export function SearchBar() {
             type="number"
             placeholder="Valor máx. (R$)"
             className="w-full border border-neutral-200 text-neutral-800 py-3 px-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm placeholder-neutral-500"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
           />
         </div>
       </div>

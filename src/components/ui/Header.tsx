@@ -9,10 +9,10 @@ export function Header() {
 
   return (
     <>
-      <header className="absolute top-0 inset-x-0 z-50 bg-white shadow-md h-20 md:h-[90px] px-4 md:px-8 flex items-center justify-between">
+      <header className="absolute top-0 inset-x-0 z-50 shadow-md h-20 md:h-[90px] px-4 md:px-8 flex items-center justify-between" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
         {/* Logo */}
         <Link href="/" className="w-48 sm:w-60 md:w-72 h-full flex items-center justify-start py-2.5">
-          <img src="/logo.png" alt="Logo HI Imóveis" className="w-[110%] max-w-[110%] h-auto md:h-full object-contain object-left md:scale-[1.10] origin-left" />
+          <img src="/logo.png" alt="Logo HI Imóveis" style={{ filter: "drop-shadow(0px 0px 6px white) drop-shadow(0px 0px 10px white) drop-shadow(0px 0px 15px white)" }} className="w-[110%] max-w-[110%] h-auto md:h-full object-contain object-left md:scale-[1.10] origin-left" />
         </Link>
 
         {/* Desktop Links */}
@@ -46,7 +46,7 @@ export function Header() {
         <div className="fixed inset-0 z-[100] bg-white flex flex-col pt-6 pb-8 px-6 overflow-y-auto w-full h-screen animate-fade-in-up">
           <div className="flex items-center justify-between mb-16">
             <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="w-44">
-              <img src="/logo.png" alt="Logo HI" className="w-full h-auto object-contain object-left" />
+              <img src="/logo.png" alt="Logo HI" style={{ filter: "drop-shadow(0px 0px 6px white) drop-shadow(0px 0px 10px white) drop-shadow(0px 0px 15px white)" }} className="w-full h-auto object-contain object-left" />
             </Link>
             <button 
               onClick={() => setIsMobileMenuOpen(false)}

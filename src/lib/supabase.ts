@@ -35,7 +35,10 @@ export type Property = {
   bathrooms?: number;
   area?: number;
   location?: string;
+  neighborhood?: string | null;
+  property_type?: string | null;
   status: 'Available' | 'Sold';
+  is_featured?: boolean;
   main_image_url: string;
   gallery_urls: string[] | null;
   video_url: string | null;
@@ -53,6 +56,8 @@ export type Project = {
   status: 'Launch' | 'InProgress' | 'Ready';
   stage?: string;
   location: string;
+  neighborhood?: string | null;
+  property_type?: string | null;
   features: string[];
   main_image_url: string;
   gallery_urls: string[] | null;

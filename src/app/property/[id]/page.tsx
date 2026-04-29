@@ -17,23 +17,23 @@ export default async function PropertyDetails({ params }: { params: { id: string
 
   const isMock = !property && process.env.NODE_ENV === "development";
   const displayProperty: Property | null = property || (isMock ? {
-      id: "1",
-      title: "Mansão Suspensa em Balneário Camboriú",
-      description: "Vista definitiva para o mar, acabamento premium, 4 suítes, infraestrutura completa de resort. O projeto conta com assinaturas internacionais de arquitetura, trazendo o mais alto nível de conforto e sofisticação para sua família.",
-      price: 15500000,
-      type: "Sale",
-      status: "Available",
-      bedrooms: 4,
-      bathrooms: 6,
-      area: 450,
-      location: "Balneário Camboriú, SC",
-      main_image_url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop",
-      gallery_urls: [
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
-      ],
-      video_url: "https://cdn.pixabay.com/video/2021/08/21/85800-591785532_large.mp4",
-      created_at: new Date().toISOString()
+    id: "1",
+    title: "Mansão Suspensa em Balneário Camboriú",
+    description: "Vista definitiva para o mar, acabamento premium, 4 suítes, infraestrutura completa de resort. O projeto conta com assinaturas internacionais de arquitetura, trazendo o mais alto nível de conforto e sofisticação para sua família.",
+    price: 15500000,
+    type: "Sale",
+    status: "Available",
+    bedrooms: 4,
+    bathrooms: 6,
+    area: 450,
+    location: "Balneário Camboriú, SC",
+    main_image_url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop",
+    gallery_urls: [
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop"
+    ],
+    video_url: "https://cdn.pixabay.com/video/2021/08/21/85800-591785532_large.mp4",
+    created_at: new Date().toISOString()
   } : null);
 
   if (!displayProperty) {
@@ -46,12 +46,12 @@ export default async function PropertyDetails({ params }: { params: { id: string
       <div className="relative h-[45vh] md:h-[70vh] w-full">
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-[#0A0A0A]/20 to-transparent z-10 pointer-events-none md:block hidden" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10 pointer-events-none md:hidden block" />
-        <ImageCarousel 
-          mainImage={displayProperty.main_image_url} 
-          gallery={displayProperty.gallery_urls} 
-          title={displayProperty.title} 
+        <ImageCarousel
+          mainImage={displayProperty.main_image_url}
+          gallery={displayProperty.gallery_urls}
+          title={displayProperty.title}
         />
-        
+
         <div className="absolute top-6 left-6 z-20">
           <Link href="/" className="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-md text-[#2C2C2C] hover:bg-white hover:text-hi-blue hover:scale-105 shadow-md transition-all">
             <ArrowLeft size={22} />
@@ -80,7 +80,7 @@ export default async function PropertyDetails({ params }: { params: { id: string
                 <span>{displayProperty.location || 'Localização sob Consulta'}</span>
               </div>
             </div>
-            
+
             <div className="text-left md:text-right bg-white/90 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-2xl">
               <p className="text-sm text-neutral-600 mb-1 uppercase tracking-wide font-semibold">Valor do Investimento</p>
               <p className="text-4xl font-bold text-hi-blue">
@@ -119,7 +119,7 @@ export default async function PropertyDetails({ params }: { params: { id: string
               <span>{displayProperty.location || 'Localização sob Consulta'}</span>
             </div>
           </div>
-          
+
           <div className="pt-4 border-t border-neutral-100">
             <p className="text-[10px] text-neutral-500 mb-1 uppercase tracking-widest font-bold">Investimento</p>
             <p className="text-3xl font-extrabold text-hi-blue tracking-tight">
@@ -138,7 +138,7 @@ export default async function PropertyDetails({ params }: { params: { id: string
       <div className="max-w-7xl mx-auto px-6 md:px-16 pt-2 md:pt-16 grid grid-cols-1 lg:grid-cols-3 gap-12 md:gap-16">
         {/* Main Content Info */}
         <div className="lg:col-span-2 space-y-12">
-          
+
           {/* Amenities Mock Highlights */}
           <div className="grid grid-cols-3 gap-4 py-8 border-y border-neutral-200">
             <div className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-neutral-200 shadow-sm">
@@ -165,7 +165,6 @@ export default async function PropertyDetails({ params }: { params: { id: string
             </p>
             {/* Extended mock description for layout effect */}
             <p className="leading-relaxed mt-4">
-              Cada detalhe deste imóvel foi pensado para oferecer a mais pura experiência de luxo e conforto. Materiais nobres escolhidos a dedo, integração flúida de ambientes e uma iluminação natural invejável tornam essa propriedade um verdadeiro refúgio urbano. Elevadores de alta performance, automação residencial compatível e sistema de segurança 24 horas reforçam o caráter exclusivo.
             </p>
           </div>
 
@@ -175,15 +174,15 @@ export default async function PropertyDetails({ params }: { params: { id: string
               <h2 className="text-2xl font-bold text-[#2C2C2C] mb-8 font-serif tracking-tight">Tour Virtual Residencial</h2>
               <div className="aspect-video w-full rounded-2xl overflow-hidden bg-white border border-neutral-200 shadow-xl block relative">
                 {displayProperty.video_url.includes("youtube.com") || displayProperty.video_url.includes("youtu.be") ? (
-                   <iframe 
+                  <iframe
                     className="absolute inset-0 w-full h-full"
-                    src={displayProperty.video_url.replace("watch?v=", "embed/")} 
+                    src={displayProperty.video_url.replace("watch?v=", "embed/")}
                     title="Vídeo da Propriedade"
-                    allowFullScreen 
+                    allowFullScreen
                   />
                 ) : (
-                  <video 
-                    controls 
+                  <video
+                    controls
                     className="absolute inset-0 w-full h-full object-cover"
                     src={displayProperty.video_url}
                     poster={displayProperty.main_image_url}
@@ -196,7 +195,7 @@ export default async function PropertyDetails({ params }: { params: { id: string
 
         {/* Sidebar Sticky / Contact */}
         <div className="lg:col-span-1">
-          <ContactForm 
+          <ContactForm
             propertyTitle={displayProperty.title}
             propertyLocation={displayProperty.location}
             brokerName={displayProperty.broker_name}
@@ -233,9 +232,9 @@ export default async function PropertyDetails({ params }: { params: { id: string
       )}
 
       {/* Floating Action Button */}
-      <WhatsAppButton 
-        propertyTitle={displayProperty.title} 
-        brokerWhatsapp={displayProperty.broker_whatsapp} 
+      <WhatsAppButton
+        propertyTitle={displayProperty.title}
+        brokerWhatsapp={displayProperty.broker_whatsapp}
       />
     </main>
   );

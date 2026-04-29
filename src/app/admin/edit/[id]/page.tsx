@@ -25,12 +25,28 @@ export default function EditPropertyPage() {
     bathrooms: "",
     area: "",
     location: "",
+    neighborhood: "",
+    property_type: "",
     video_url: "",
     broker_name: "",
     broker_whatsapp: "",
+    is_featured: false,
   });
   const [existingMainImage, setExistingMainImage] = useState("");
   const [existingGallery, setExistingGallery] = useState<string[]>([]);
+
+  const [options, setOptions] = useState<{ neighborhoods: string[], propertyTypes: string[] }>({ neighborhoods: [], propertyTypes: [] });
+
+  useEffect(() => {
+    supabase.from("system_options").select("*").then(({ data }) => {
+      if (data) {
+        setOptions({
+          neighborhoods: data.filter(d => d.type === 'neighborhood').map(d => d.value).sort(),
+          propertyTypes: data.filter(d => d.type === 'property_type').map(d => d.value).sort()
+        });
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -59,9 +75,12 @@ export default function EditPropertyPage() {
           bathrooms: data.bathrooms?.toString() || "",
           area: data.area?.toString() || "",
           location: data.location || "",
+          neighborhood: data.neighborhood || "",
+          property_type: data.property_type || "",
           video_url: data.video_url || "",
           broker_name: data.broker_name || "",
           broker_whatsapp: data.broker_whatsapp || "",
+          is_featured: data.is_featured || false,
         });
         setExistingMainImage(data.main_image_url || "");
         setExistingGallery(data.gallery_urls || []);
@@ -135,11 +154,14 @@ export default function EditPropertyPage() {
         bathrooms: parseInt(formData.bathrooms) || 0,
         area: parseInt(formData.area) || 0,
         location: formData.location,
+        neighborhood: formData.neighborhood || null,
+        property_type: formData.property_type || null,
         main_image_url: finalImageUrl,
         gallery_urls: finalGalleryUrls,
         video_url: formData.video_url || null,
         broker_name: formData.broker_name || null,
         broker_whatsapp: formData.broker_whatsapp || null,
+        is_featured: formData.is_featured,
       }).eq("id", id);
 
       if (error) {
@@ -270,6 +292,31 @@ export default function EditPropertyPage() {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Bairro</label>
+                <select 
+                  className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none cursor-pointer"
+                  value={formData.neighborhood}
+                  onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
+                >
+                  <option value="">Selecione o Bairro...</option>
+                  {options.neighborhoods.map(n => <option key={n} value={n}>{n}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">Tipo de Imóvel</label>
+                <select 
+                  className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none cursor-pointer"
+                  value={formData.property_type}
+                  onChange={(e) => setFormData({...formData, property_type: e.target.value})}
+                >
+                  <option value="">Selecione o Tipo...</option>
+                  {options.propertyTypes.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+            </div>
+
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">Quartos</label>
@@ -298,6 +345,20 @@ export default function EditPropertyPage() {
                   onChange={(e) => setFormData({...formData, area: e.target.value})}
                 />
               </div>
+            </div>
+
+            <div className="pt-4 border-t border-neutral-100 mt-2">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  className="w-5 h-5 rounded border-neutral-300 text-hi-blue focus:ring-hi-blue cursor-pointer"
+                  checked={formData.is_featured}
+                  onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
+                />
+                <span className="text-sm font-semibold text-neutral-800">
+                  Destaque: Exibir este imóvel na "Nossa Seleção Especial" (Carrossel Inicial)
+                </span>
+              </label>
             </div>
           </div>
         </div>
