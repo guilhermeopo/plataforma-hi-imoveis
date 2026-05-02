@@ -35,7 +35,7 @@ export default function SobrePage() {
                 A HI Imóveis nasceu exatamente com esse entendimento.
               </p>
               <p>
-                Fundada por <strong>Haline Tonello</strong> e <strong>Ivan Marques</strong>, a empresa une experiência prática de mercado, visão estratégica e, principalmente, compromisso real com cada cliente. Aqui, não trabalhamos com "vendas por impulso". Trabalhamos com escolhas bem orientadas.
+                Fundada por <strong>Haline Tonello</strong> e <strong>Ivan Marques</strong>, a empresa une experiência prática de mercado, visão estratégica e, principalmente, compromisso real com cada cliente. Aqui, não trabalhamos com &quot;vendas por impulso&quot;. Trabalhamos com escolhas bem orientadas.
               </p>
             </div>
           </div>
@@ -99,7 +99,7 @@ export default function SobrePage() {
           <div className="pt-10 w-fit mx-auto">
              <div className="h-1 w-20 bg-[#d3a300] mx-auto rounded-full mb-8"></div>
              <p className="text-2xl md:text-4xl font-serif text-[#2C2C2C] italic">
-               "Aqui, você não encontra apenas imóveis.<br className="hidden md:block"/> Você encontra orientação, transparência e um caminho mais seguro para chegar onde quer."
+               &quot;Aqui, você não encontra apenas imóveis.<br className="hidden md:block"/> Você encontra orientação, transparência e um caminho mais seguro para chegar onde quer.&quot;
              </p>
           </div>
         </div>
