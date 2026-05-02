@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 
 export function Header() {
@@ -9,35 +10,46 @@ export function Header() {
 
   return (
     <>
-      <header className="absolute top-0 inset-x-0 z-50 shadow-md h-20 md:h-[90px] px-4 md:px-8 flex items-center justify-between" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
-        {/* Logo */}
-        <Link href="/" className="w-48 sm:w-60 md:w-72 h-full flex items-center justify-start py-2.5">
-          <img src="/logo.png" alt="Logo HI Imóveis" style={{ filter: "drop-shadow(0px 0px 6px white) drop-shadow(0px 0px 10px white) drop-shadow(0px 0px 15px white)" }} className="w-[110%] max-w-[110%] h-auto md:h-full object-contain object-left md:scale-[1.10] origin-left" />
-        </Link>
-
-        {/* Desktop Links */}
-        <nav className="hidden lg:flex items-center gap-6 font-sans text-sm font-semibold text-neutral-800">
-          <Link href="/sobre" className="hover:text-[#d95d29] transition-colors">Sobre nós</Link>
-          <Link href="/#venda" className="hover:text-[#d95d29] transition-colors">Imóveis</Link>
-          <Link href="/#empreendimentos" className="hover:text-[#d95d29] transition-colors">Empreendimentos</Link>
-          <Link href="/contato" className="hover:text-[#d95d29] transition-colors">Contato</Link>
-        </nav>
-
-        {/* Desktop Actions */}
-        <div className="hidden lg:flex items-center gap-4">
-          <Link href="/admin" className="text-sm font-semibold text-neutral-600 hover:text-[#d95d29] border border-neutral-300 hover:border-[#d95d29] px-5 py-2 rounded-md transition-all shadow-sm" title="Painel Administrativo">
-            Acesso
+      <header className="fixed top-0 inset-x-0 z-50 bg-[#FFB800] shadow-md h-20 md:h-24 px-6 md:px-12 flex items-center justify-between" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: 'cover' }}>
+        <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
+          {/* Logo */}
+          <Link href="/" className="relative w-48 md:w-64 h-12 md:h-16">
+            <Image 
+              src="/logo.png" 
+              alt="Logo HI Imóveis" 
+              fill
+              priority
+              className="object-contain object-left"
+              style={{ filter: "drop-shadow(0px 0px 8px white)" }}
+            />
           </Link>
-        </div>
 
-        {/* Mobile Hamburger */}
-        <div className="lg:hidden flex items-center">
-          <button 
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="text-[#FFB800] p-2 hover:bg-neutral-100 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#FFB800]"
-          >
-            <Menu size={32} />
-          </button>
+          {/* Navigation & Actions Wrapper */}
+          <div className="flex items-center gap-8">
+            {/* Desktop Links */}
+            <nav className="hidden lg:flex items-center gap-8 font-sans text-sm font-bold text-neutral-800">
+              <Link href="/sobre" className="hover:text-white transition-colors">Sobre nós</Link>
+              <Link href="/#venda" className="hover:text-white transition-colors">Imóveis</Link>
+              <Link href="/#empreendimentos" className="hover:text-white transition-colors">Empreendimentos</Link>
+              <Link href="/contato" className="hover:text-white transition-colors">Contato</Link>
+            </nav>
+
+            {/* Desktop Action Button */}
+            <div className="hidden lg:block">
+              <Link href="/admin" className="px-5 py-2.5 border-2 border-neutral-800 text-neutral-800 hover:bg-neutral-800 hover:text-white rounded-lg font-bold text-sm transition-all shadow-sm">
+                Acesso
+              </Link>
+            </div>
+
+            {/* Mobile Hamburger Button */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden text-neutral-800 p-2 hover:bg-white/20 rounded-lg transition-colors"
+              aria-label="Abrir menu"
+            >
+              <Menu size={32} />
+            </button>
+          </div>
         </div>
       </header>
 
