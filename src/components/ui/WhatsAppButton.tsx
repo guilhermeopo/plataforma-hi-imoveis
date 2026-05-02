@@ -4,17 +4,19 @@ import { MessageCircle } from "lucide-react";
 
 export function WhatsAppButton({
   propertyTitle,
-  brokerWhatsapp
+  brokerWhatsapp,
+  propertyCode
 }: {
   propertyTitle?: string,
-  brokerWhatsapp?: string | null
+  brokerWhatsapp?: string | null,
+  propertyCode?: string | null
 }) {
   const message = propertyTitle
-    ? `Olá! Gostaria de mais informações sobre o imóvel: ${propertyTitle}`
+    ? `Olá! Gostaria de mais informações sobre o imóvel: ${propertyTitle}${propertyCode ? ` (CÓD: ${propertyCode})` : ''}`
     : "Olá! Gostaria de falar com um corretor sobre os imóveis.";
 
   const encodedMessage = encodeURIComponent(message);
-  const targetNumber = brokerWhatsapp ? brokerWhatsapp.replace(/\D/g, '') : "5568999299010";
+  const targetNumber = brokerWhatsapp ? brokerWhatsapp.replace(/\D/g, '') : "556899299010";
 
   return (
     <a

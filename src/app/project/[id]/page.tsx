@@ -179,23 +179,46 @@ export default async function ProjectDetails({ params }: { params: { id: string 
           {displayProject.video_url && (
             <div className="pt-8">
               <h2 className="text-2xl font-bold text-[#2C2C2C] mb-8 font-serif tracking-tight">Vídeo de Apresentação</h2>
-              <div className="aspect-video w-full rounded-2xl overflow-hidden bg-white border border-neutral-200 shadow-xl block relative">
-                {displayProject.video_url.includes("youtube.com") || displayProject.video_url.includes("youtu.be") ? (
-                   <iframe 
-                    className="absolute inset-0 w-full h-full"
-                    src={displayProject.video_url.replace("watch?v=", "embed/")} 
-                    title="Vídeo do Empreendimento"
-                    allowFullScreen 
+              
+              {displayProject.video_url.includes("instagram.com") ? (
+                <div className="flex justify-center w-full">
+                  <iframe
+                    className="rounded-2xl border border-neutral-200 shadow-xl bg-white"
+                    src={(() => {
+                       try {
+                         const urlObj = new URL(displayProject.video_url);
+                         urlObj.search = '';
+                         let base = urlObj.toString();
+                         if (!base.endsWith('/')) base += '/';
+                         return base + 'embed';
+                       } catch { return displayProject.video_url }
+                    })()}
+                    width="400"
+                    height="480"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowTransparency={true}
                   />
-                ) : (
-                  <video 
-                    controls 
-                    className="absolute inset-0 w-full h-full object-cover"
-                    src={displayProject.video_url}
-                    poster={displayProject.main_image_url}
-                  />
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="aspect-video w-full rounded-2xl overflow-hidden bg-white border border-neutral-200 shadow-xl block relative">
+                  {displayProject.video_url.includes("youtube.com") || displayProject.video_url.includes("youtu.be") ? (
+                     <iframe 
+                      className="absolute inset-0 w-full h-full"
+                      src={displayProject.video_url.replace("watch?v=", "embed/")} 
+                      title="Vídeo do Empreendimento"
+                      allowFullScreen 
+                    />
+                  ) : (
+                    <video 
+                      controls 
+                      className="absolute inset-0 w-full h-full object-cover"
+                      src={displayProject.video_url}
+                      poster={displayProject.main_image_url}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -207,6 +230,7 @@ export default async function ProjectDetails({ params }: { params: { id: string 
             propertyLocation={displayProject.location}
             brokerName={displayProject.broker_name}
             brokerWhatsapp={displayProject.broker_whatsapp}
+            propertyCode={displayProject.code}
           />
         </div>
       </div>
@@ -239,6 +263,7 @@ export default async function ProjectDetails({ params }: { params: { id: string 
       <WhatsAppButton 
         propertyTitle={`Lançamento: ${displayProject.title}`} 
         brokerWhatsapp={displayProject.broker_whatsapp} 
+        propertyCode={displayProject.code}
       />
     </main>
   );

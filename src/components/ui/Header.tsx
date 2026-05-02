@@ -25,8 +25,8 @@ export function Header() {
 
         {/* Desktop Actions */}
         <div className="hidden lg:flex items-center gap-4">
-          <Link href="/contato" className="text-sm font-bold text-white bg-[#FFB800] hover:bg-[#E5A500] px-6 py-2.5 rounded-sm transition-colors shadow-sm">
-            Anuncie Aqui
+          <Link href="/admin" className="text-sm font-semibold text-neutral-600 hover:text-[#d95d29] border border-neutral-300 hover:border-[#d95d29] px-5 py-2 rounded-md transition-all shadow-sm" title="Painel Administrativo">
+            Acesso
           </Link>
         </div>
 
@@ -64,8 +64,8 @@ export function Header() {
           </nav>
           
           <div className="mt-auto pt-8">
-             <Link href="/contato" onClick={() => setIsMobileMenuOpen(false)} className="w-full block text-center text-xl font-bold text-white bg-[#FFB800] hover:bg-[#E5A500] py-4 rounded-sm transition-colors shadow-md">
-                Anuncie Aqui
+             <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="w-full flex justify-center text-sm font-bold text-neutral-600 border border-neutral-300 hover:border-[#d95d29] hover:text-[#d95d29] py-3 rounded-md transition-all shadow-sm">
+                Acesso
              </Link>
           </div>
         </div>

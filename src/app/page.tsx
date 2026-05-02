@@ -22,18 +22,21 @@ export default async function Home({
   const maxPrice = searchParams.maxPrice ? Number(searchParams.maxPrice) : Infinity;
   const code = searchParams.code?.toLowerCase() || "";
 
-  const [{ data: properties }, { data: projects }] = await Promise.all([
+  const [{ data: properties }, { data: projects }, { data: systemOptions }] = await Promise.all([
     supabase.from("properties").select("*").order("created_at", { ascending: false }),
-    supabase.from("projects").select("*").order("created_at", { ascending: false })
+    supabase.from("projects").select("*").order("created_at", { ascending: false }),
+    supabase.from("system_options").select("*").order("value", { ascending: true })
   ]);
 
   const allLocationsRaw = [
+    ...(systemOptions?.filter(o => o.type === "neighborhood").map(o => o.value) || []),
     ...(properties || []).map(p => p.neighborhood),
     ...(projects || []).map(p => p.neighborhood)
   ].filter(Boolean) as string[];
   const allLocations = Array.from(new Set(allLocationsRaw)).sort();
 
   const allTypesRaw = [
+    ...(systemOptions?.filter(o => o.type === "property_type").map(o => o.value) || []),
     ...(properties || []).map(p => p.property_type),
     ...(projects || []).map(p => p.property_type)
   ].filter(Boolean) as string[];

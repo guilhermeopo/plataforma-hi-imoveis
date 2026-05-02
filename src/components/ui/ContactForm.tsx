@@ -7,12 +7,16 @@ export function ContactForm({
   propertyTitle, 
   propertyLocation, 
   brokerName, 
-  brokerWhatsapp 
+  brokerWhatsapp,
+  isGeneralContact,
+  propertyCode
 }: { 
   propertyTitle: string;
   propertyLocation?: string;
   brokerName?: string | null;
   brokerWhatsapp?: string | null;
+  isGeneralContact?: boolean;
+  propertyCode?: string | null;
 }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,26 +29,43 @@ export function ContactForm({
       return;
     }
 
-    const number = brokerWhatsapp || "5511999999999";
+    const number = brokerWhatsapp || "556899299010";
     const cleanNumber = number.replace(/\D/g, '');
     
-    const text = `Olá${brokerName ? ' ' + brokerName : ''}! Meu nome é *${name}*.
-    
+    let text = "";
+    if (isGeneralContact) {
+      text = `Olá! Meu nome é *${name}*.
+      
+Estou entrando em contato através do site e gostaria de conversar com um de seus consultores.
+Meu telefone de retorno é: ${phone}${email ? `\nMeu e-mail alternativo: ${email}` : ''}
+
+Aguardando retorno, obrigado!`.replace(/      /g, '');
+    } else {
+      text = `Olá${brokerName ? ' ' + brokerName : ''}! Meu nome é *${name}*.
+      
 Estou entrando em contato através do site pois tenho muito interesse no imóvel:
-📍 *${propertyTitle}*
+📍 *${propertyTitle}*${propertyCode ? ` (CÓD: ${propertyCode})` : ''}
 ${propertyLocation ? `🗺️ Localizado em: ${propertyLocation}\n` : ''}
 Gostaria de agendar uma visita ou receber mais detalhes.
 Meu telefone de retorno é: ${phone}${email ? `\nMeu e-mail alternativo: ${email}` : ''}
 
-Aguardando retorno, obrigado!`.replace(/    /g, '');
+Aguardando retorno, obrigado!`.replace(/      /g, '');
+    }
 
     window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const handleQuickWhatsApp = () => {
-    const number = brokerWhatsapp || "5511999999999";
+    const number = brokerWhatsapp || "556899299010";
     const cleanNumber = number.replace(/\D/g, '');
-    const text = `Olá${brokerName ? ' ' + brokerName : ''}! Tenho interesse no imóvel: *${propertyTitle}*. Pode me ajudar?`;
+    
+    let text = "";
+    if (isGeneralContact) {
+      text = `Olá! Estou na página de contato do site e gostaria de falar com um de seus consultores. Pode me ajudar?`;
+    } else {
+      text = `Olá${brokerName ? ' ' + brokerName : ''}! Tenho interesse no imóvel: *${propertyTitle}*${propertyCode ? ` (CÓD: ${propertyCode})` : ''}. Pode me ajudar?`;
+    }
+    
     window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(text)}`, '_blank');
   }
 
@@ -52,9 +73,11 @@ Aguardando retorno, obrigado!`.replace(/    /g, '');
     <div className="sticky top-8 bg-white border border-neutral-200 rounded-3xl p-8 shadow-xl">
       <h3 className="text-xl font-bold text-[#2C2C2C] mb-2 font-serif">Agende sua Visita</h3>
       <p className="text-neutral-500 text-sm mb-8 font-medium">
-        {brokerName 
-          ? `Fale diretamente com nosso corretor especialista, ${brokerName}.`
-          : `Fale diretamente com nosso corretor especializado neste imóvel.`}
+        {isGeneralContact
+          ? "Preencha o formulário abaixo e direcionaremos você ao consultor ideal."
+          : (brokerName 
+              ? `Fale diretamente com nosso corretor especialista, ${brokerName}.`
+              : `Fale diretamente com nosso corretor especializado neste imóvel.`)}
       </p>
       
       <form onSubmit={handleWhatsApp} className="space-y-4">
@@ -83,10 +106,10 @@ Aguardando retorno, obrigado!`.replace(/    /g, '');
         />
         <button 
           type="submit"
-          className="w-full bg-hi-blue hover:bg-[#347Ab7] text-white font-bold py-4 rounded-xl transition-all shadow-md mt-4 flex items-center justify-center gap-2"
+          className="w-full bg-[#d3a300] hover:bg-[#b58c00] text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl mt-4 flex items-center justify-center gap-2"
         >
-          <MessageCircle size={20} />
-          Solicitar Contato Privado
+          <MessageCircle size={22} />
+          Enviar Mensagem via WhatsApp
         </button>
       </form>
 
@@ -94,9 +117,9 @@ Aguardando retorno, obrigado!`.replace(/    /g, '');
         <p className="text-sm text-neutral-500 mb-4 font-medium">Ou prefere falar agora mesmo?</p>
         <button 
           onClick={handleQuickWhatsApp}
-          className="flex items-center justify-center gap-3 w-full bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] font-bold py-4 rounded-xl transition-colors border border-[#25D366]/20"
+          className="flex items-center justify-center gap-3 w-full bg-transparent hover:bg-[#25D366]/10 text-[#25D366] font-bold py-4 rounded-xl transition-colors border-2 border-[#25D366]"
         >
-          Chamar Corretor no WhatsApp
+          Falar diretamente com o Corretor
         </button>
       </div>
     </div>

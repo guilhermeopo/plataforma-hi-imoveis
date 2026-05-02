@@ -356,7 +356,7 @@ export default function EditPropertyPage() {
                   onChange={(e) => setFormData({...formData, is_featured: e.target.checked})}
                 />
                 <span className="text-sm font-semibold text-neutral-800">
-                  Destaque: Exibir este imóvel na "Nossa Seleção Especial" (Carrossel Inicial)
+                  Destaque: Exibir este imóvel na &quot;Nossa Seleção Especial&quot; (Carrossel Inicial)
                 </span>
               </label>
             </div>

@@ -54,7 +54,7 @@ export function PropertyCarousel({ properties, titleDark, titleRed, subtitle }: 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
         <div>
           <h2 className="text-3xl md:text-4xl font-bold font-serif mb-2 tracking-tight">
-            <span className="text-[#2C2C2C]">{titleDark}</span> <span className="text-[#FF0000]">{titleRed}</span>
+            <span className="text-[#2C2C2C]">{titleDark}</span> <span className="text-[#d3a300]">{titleRed}</span>
           </h2>
           <p className="text-neutral-600">{subtitle}</p>
         </div>
@@ -64,7 +64,7 @@ export function PropertyCarousel({ properties, titleDark, titleRed, subtitle }: 
             <button 
               onClick={() => scroll("left")}
               disabled={!canScrollLeft}
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${canScrollLeft ? 'bg-[#FF0000] text-white hover:bg-red-700' : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'}`}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${canScrollLeft ? 'bg-[#d3a300] text-white hover:bg-[#b58c00]' : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'}`}
               aria-label="Scroll left"
             >
               <ChevronLeft size={24} />
@@ -72,14 +72,14 @@ export function PropertyCarousel({ properties, titleDark, titleRed, subtitle }: 
             <button 
               onClick={() => scroll("right")}
               disabled={!canScrollRight}
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${canScrollRight ? 'bg-[#FF0000] text-white hover:bg-red-700' : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'}`}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${canScrollRight ? 'bg-[#d3a300] text-white hover:bg-[#b58c00]' : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'}`}
               aria-label="Scroll right"
             >
               <ChevronRight size={24} />
             </button>
           </div>
-          <Link href="/imoveis" className="px-6 py-2 border border-[#FF0000] text-[#FF0000] hover:bg-[#FF0000] hover:text-white rounded-full font-medium transition-colors text-sm">
-            Ver Mais Imóveis
+          <Link href="/" className="px-6 py-2 border border-[#d3a300] text-[#d3a300] hover:bg-[#d3a300] hover:text-white rounded-full font-medium transition-colors text-sm">
+            Ver Todos os Imóveis
           </Link>
         </div>
       </div>
@@ -102,8 +102,8 @@ export function PropertyCarousel({ properties, titleDark, titleRed, subtitle }: 
       </div>
       
       <div className="mt-4 flex justify-center md:hidden">
-          <Link href="/imoveis" className="px-6 py-3 border border-[#FF0000] text-[#FF0000] hover:bg-[#FF0000] hover:text-white rounded-full font-medium transition-colors w-full text-center">
-            Ver Mais Imóveis
+          <Link href="/" className="px-6 py-3 border border-[#d3a300] text-[#d3a300] hover:bg-[#d3a300] hover:text-white rounded-full font-medium transition-colors w-full text-center">
+            Ver Todos os Imóveis
           </Link>
       </div>
     </section>

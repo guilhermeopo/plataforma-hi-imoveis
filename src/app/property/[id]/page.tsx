@@ -171,24 +171,47 @@ export default async function PropertyDetails({ params }: { params: { id: string
           {/* Video Player Section */}
           {displayProperty.video_url && (
             <div className="pt-8">
-              <h2 className="text-2xl font-bold text-[#2C2C2C] mb-8 font-serif tracking-tight">Tour Virtual Residencial</h2>
-              <div className="aspect-video w-full rounded-2xl overflow-hidden bg-white border border-neutral-200 shadow-xl block relative">
-                {displayProperty.video_url.includes("youtube.com") || displayProperty.video_url.includes("youtu.be") ? (
+              <h2 className="text-2xl font-bold text-[#2C2C2C] mb-8 font-serif tracking-tight">Tour Virtual / Apresentação</h2>
+              
+              {displayProperty.video_url.includes("instagram.com") ? (
+                <div className="flex justify-center w-full">
                   <iframe
-                    className="absolute inset-0 w-full h-full"
-                    src={displayProperty.video_url.replace("watch?v=", "embed/")}
-                    title="Vídeo da Propriedade"
-                    allowFullScreen
+                    className="rounded-2xl border border-neutral-200 shadow-xl bg-white"
+                    src={(() => {
+                       try {
+                         const urlObj = new URL(displayProperty.video_url);
+                         urlObj.search = '';
+                         let base = urlObj.toString();
+                         if (!base.endsWith('/')) base += '/';
+                         return base + 'embed';
+                       } catch { return displayProperty.video_url }
+                    })()}
+                    width="400"
+                    height="480"
+                    frameBorder="0"
+                    scrolling="no"
+                    allowTransparency={true}
                   />
-                ) : (
-                  <video
-                    controls
-                    className="absolute inset-0 w-full h-full object-cover"
-                    src={displayProperty.video_url}
-                    poster={displayProperty.main_image_url}
-                  />
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="aspect-video w-full rounded-2xl overflow-hidden bg-white border border-neutral-200 shadow-xl block relative">
+                  {displayProperty.video_url.includes("youtube.com") || displayProperty.video_url.includes("youtu.be") ? (
+                    <iframe
+                      className="absolute inset-0 w-full h-full"
+                      src={displayProperty.video_url.replace("watch?v=", "embed/")}
+                      title="Vídeo da Propriedade"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <video
+                      controls
+                      className="absolute inset-0 w-full h-full object-cover"
+                      src={displayProperty.video_url}
+                      poster={displayProperty.main_image_url}
+                    />
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -200,6 +223,7 @@ export default async function PropertyDetails({ params }: { params: { id: string
             propertyLocation={displayProperty.location}
             brokerName={displayProperty.broker_name}
             brokerWhatsapp={displayProperty.broker_whatsapp}
+            propertyCode={displayProperty.code}
           />
         </div>
       </div>
@@ -235,6 +259,7 @@ export default async function PropertyDetails({ params }: { params: { id: string
       <WhatsAppButton
         propertyTitle={displayProperty.title}
         brokerWhatsapp={displayProperty.broker_whatsapp}
+        propertyCode={displayProperty.code}
       />
     </main>
   );
