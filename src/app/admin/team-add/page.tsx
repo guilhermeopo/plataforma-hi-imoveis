@@ -66,9 +66,9 @@ export default function AddTeamMember() {
       alert("Colaborador adicionado com sucesso!");
       router.push('/admin');
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      alert(err.message || "Erro desconhecido ao salvar o colaborador.");
+      alert((err as Error).message || "Erro desconhecido ao salvar o colaborador.");
     } finally {
       setLoading(false);
     }

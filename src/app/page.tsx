@@ -181,10 +181,11 @@ export default async function Home({
         {/* Background Video */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/50 z-10 pointer-events-none" />
-          <img
-            className="w-full h-full object-cover"
+          <Image
             src="/fundonovo.png"
             alt="Hero Background"
+            fill
+            className="w-full h-full object-cover"
           />
         </div>
 
@@ -197,7 +198,7 @@ export default async function Home({
           {/* Frase Principal Estilizada */}
 
           {/* Search Bar */}
-          <SearchBar neighborhoods={allLocations} propertyTypes={allTypes} projectTitles={allProjectTitles} />
+          <SearchBar neighborhoods={allLocations} propertyTypes={allTypes} />
         </div>
       </section>
 

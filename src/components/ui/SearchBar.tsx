@@ -6,19 +6,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export function SearchBar({ 
   neighborhoods = [], 
-  propertyTypes = [],
-  projectTitles = []
+  propertyTypes = []
 }: { 
   neighborhoods?: string[], 
-  propertyTypes?: string[],
-  projectTitles?: string[]
+  propertyTypes?: string[]
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [intent, setIntent] = useState(searchParams.get("intent") || "");
   const [location, setLocation] = useState(searchParams.get("location") || "");
   const [type, setType] = useState(searchParams.get("type") || "");
-  const [projectTitle, setProjectTitle] = useState(searchParams.get("project") || "");
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
   const [code, setCode] = useState(searchParams.get("code") || "");

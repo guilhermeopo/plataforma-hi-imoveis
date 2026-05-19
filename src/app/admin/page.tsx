@@ -150,6 +150,7 @@ export default function AdminDashboard() {
                   </td>
                 </tr>
               ) : (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (activeTab === "properties" ? filteredProperties : activeTab === "projects" ? filteredProjects : filteredTeam).map((item: any) => (
                   <tr key={item.id} className="hover:bg-neutral-50 transition-colors group">
                     <td className="p-4">
