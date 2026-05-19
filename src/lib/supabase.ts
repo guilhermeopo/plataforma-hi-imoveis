@@ -66,3 +66,11 @@ export type Project = {
   broker_whatsapp?: string | null;
   created_at: string;
 };
+
+export type TeamMember = {
+  id: string;
+  name: string;
+  role: string;
+  image_url: string;
+  created_at: string;
+};

@@ -10,25 +10,25 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-0 inset-x-0 z-50 bg-[#FFB800] shadow-md h-20 md:h-24 px-6 md:px-12 flex items-center justify-between" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: 'cover' }}>
+      <header className="fixed top-0 inset-x-0 z-50 bg-[#FFB800] shadow-md h-24 md:h-32 px-6 md:px-12 flex items-center justify-between" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: 'cover' }}>
         <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
           {/* Logo */}
-          <Link href="/" className="relative w-48 md:w-64 h-12 md:h-16">
+          <Link href="/" className="relative w-48 sm:w-64 md:w-[400px] h-20 md:h-28 shrink-0">
             <Image 
-              src="/logo.png" 
+              src="/logobranca.png" 
               alt="Logo HI Imóveis" 
               fill
               priority
-              className="object-contain object-left"
+              className="object-contain object-left scale-[2.5] md:scale-[3] origin-left pointer-events-none"
               style={{ filter: "drop-shadow(0px 0px 8px white)" }}
             />
           </Link>
 
           {/* Navigation & Actions Wrapper */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-4 sm:gap-8 relative z-20 shrink-0">
             {/* Desktop Links */}
-            <nav className="hidden lg:flex items-center gap-8 font-sans text-sm font-bold text-neutral-800">
-              <Link href="/sobre" className="hover:text-white transition-colors">Sobre nós</Link>
+            <nav className="hidden lg:flex items-center gap-8 font-sans text-sm font-bold text-white">
+              <Link href="/sobre" className="hover:text-neutral-200 transition-colors">Sobre nós</Link>
               <Link href="/#venda" className="hover:text-white transition-colors">Imóveis</Link>
               <Link href="/#empreendimentos" className="hover:text-white transition-colors">Empreendimentos</Link>
               <Link href="/contato" className="hover:text-white transition-colors">Contato</Link>
@@ -36,7 +36,7 @@ export function Header() {
 
             {/* Desktop Action Button */}
             <div className="hidden lg:block">
-              <Link href="/admin" className="px-5 py-2.5 border-2 border-neutral-800 text-neutral-800 hover:bg-neutral-800 hover:text-white rounded-lg font-bold text-sm transition-all shadow-sm">
+              <Link href="/admin" className="px-5 py-2.5 border-2 border-white text-white hover:bg-white hover:text-neutral-900 rounded-lg font-bold text-sm transition-all shadow-sm">
                 Acesso
               </Link>
             </div>
@@ -44,7 +44,7 @@ export function Header() {
             {/* Mobile Hamburger Button */}
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden text-neutral-800 p-2 hover:bg-white/20 rounded-lg transition-colors"
+              className="lg:hidden text-white p-2 hover:bg-white/20 rounded-lg transition-colors"
               aria-label="Abrir menu"
             >
               <Menu size={32} />
@@ -57,8 +57,8 @@ export function Header() {
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[100] bg-white flex flex-col pt-6 pb-8 px-6 overflow-y-auto w-full h-screen animate-fade-in-up">
           <div className="flex items-center justify-between mb-16">
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="w-44">
-              <img src="/logo.png" alt="Logo HI" style={{ filter: "drop-shadow(0px 0px 6px white) drop-shadow(0px 0px 10px white) drop-shadow(0px 0px 15px white)" }} className="w-full h-auto object-contain object-left" />
+            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="w-[300px] flex items-center">
+              <img src="/logobranca.png" alt="Logo HI" style={{ filter: "drop-shadow(0px 0px 6px white) drop-shadow(0px 0px 10px white) drop-shadow(0px 0px 15px white)" }} className="w-full h-auto object-contain object-left scale-[2] origin-left pointer-events-none" />
             </Link>
             <button 
               onClick={() => setIsMobileMenuOpen(false)}

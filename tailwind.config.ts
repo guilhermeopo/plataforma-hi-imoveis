@@ -24,8 +24,8 @@ const config: Config = {
         "hi-dark-orange": "#FFB800",
       },
       fontFamily: {
-        sans: ["'Neue Montreal'", "var(--font-montserrat)", "Inter", "sans-serif"],
-        serif: ["'The Seasons'", "var(--font-playfair)", "serif"],
+        sans: ["var(--font-neue-montreal)", "sans-serif"],
+        serif: ["var(--font-neue-montreal)", "serif"],
         madani: ["'Madani Arabic'", "sans-serif"],
       },
     },

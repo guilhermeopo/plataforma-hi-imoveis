@@ -45,8 +45,8 @@ export default function LoginPage() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 animate-fade-in-up flex flex-col items-center">
         <Link href="/" className="flex flex-col items-center justify-center mb-6 gap-4">
-          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center p-2 shadow-lg transition-transform hover:scale-105">
-            <Image src="/logo.png" alt="Logo HI Imóveis" width={96} height={96} className="w-full h-full object-contain" />
+          <div className="w-64 h-32 rounded-full flex items-center justify-center p-2 transition-transform hover:scale-105">
+            <Image src="/logobranca.png" alt="Logo HI Imóveis" width={256} height={128} className="w-full h-full object-contain scale-[2.5]" />
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-[#2C2C2C] font-serif">HI<span className="text-hi-dark-orange ml-2">IMÓVEIS</span></h2>
         </Link>

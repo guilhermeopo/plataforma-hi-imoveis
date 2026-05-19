@@ -98,10 +98,10 @@ export default async function Home({
 
   const filteredProperties = displayProperties.filter((p) => {
     if (code) return p.code?.toLowerCase().includes(code);
-    
-    if (searchProject) return false; 
-    
-    if (intent === 'empreendimento') return false; 
+
+    if (searchProject) return false;
+
+    if (intent === 'empreendimento') return false;
     if (intent === 'venda' && p.type !== 'Sale') return false;
 
     if (searchLocation) {
@@ -135,21 +135,21 @@ export default async function Home({
   const filteredProjects = displayProjects.filter((p) => {
     if (code) return p.code?.toLowerCase().includes(code);
 
-    if (intent === 'venda') return false; 
-    
+    if (intent === 'venda') return false;
+
     if (searchLocation) {
       const pLoc = p.location?.toLowerCase() || '';
       const pNeigh = p.neighborhood?.toLowerCase() || '';
       if (!pLoc.includes(searchLocation) && !pNeigh.includes(searchLocation)) return false;
     }
-    
+
     if (searchType) {
       const pType = p.property_type?.toLowerCase() || '';
       const pTitle = p.title.toLowerCase();
       const pDesc = p.description.toLowerCase();
       if (!pType.includes(searchType) && !pTitle.includes(searchType) && !pDesc.includes(searchType)) return false;
     }
-    
+
     if (minPrice && p.price_starts_at < minPrice) return false;
     if (maxPrice !== Infinity && p.price_starts_at > maxPrice) return false;
 
@@ -168,8 +168,8 @@ export default async function Home({
 
   const salesProperties = filteredProperties.filter(p => p.type === 'Sale');
 
-  const carouselProperties = displayProperties.filter(p => p.is_featured).length > 0 
-    ? displayProperties.filter(p => p.is_featured) 
+  const carouselProperties = displayProperties.filter(p => p.is_featured).length > 0
+    ? displayProperties.filter(p => p.is_featured)
     : displayProperties.slice(0, 8);
 
   return (
@@ -181,14 +181,10 @@ export default async function Home({
         {/* Background Video */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/50 z-10 pointer-events-none" />
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
+          <img
             className="w-full h-full object-cover"
-            src="https://cdn.pixabay.com/video/2021/08/21/85800-591785532_large.mp4"
-            poster="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"
+            src="/fundonovo.png"
+            alt="Hero Background"
           />
         </div>
 
@@ -222,7 +218,7 @@ export default async function Home({
         {intent !== 'venda' && (
           <ProjectGrid
             id="empreendimentos"
-            title="Empreendimentos Exclusivos"
+            title="Empreendimentos na planta"
             subtitle="Explore lançamentos e projetos em construção ideais para investir ou morar."
             emptyMessage="Nenhum empreendimento ativo encontrado com estes critérios."
             projects={filteredProjects}
@@ -230,11 +226,11 @@ export default async function Home({
         )}
 
         <div className="py-10">
-          <PropertyCarousel 
-            properties={carouselProperties} 
-            titleDark="Nossa" 
-            titleRed="Seleção Especial" 
-            subtitle="Confira as oportunidades que separamos para você." 
+          <PropertyCarousel
+            properties={carouselProperties}
+            titleDark="Nossa"
+            titleRed="Seleção Especial"
+            subtitle="Confira as oportunidades que separamos para você."
           />
         </div>
       </div>
@@ -244,37 +240,37 @@ export default async function Home({
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-1">
-                <Image src="/logo.png" alt="HI Imóveis Logo" width={48} height={48} className="w-full h-full object-contain" />
+              <div className="w-48 h-20 flex items-center justify-center overflow-visible">
+                <Image src="/logobranca.png" alt="HI Imóveis Logo" width={192} height={80} className="w-full h-full object-contain object-left scale-[2.5] origin-left" />
               </div>
               <div className="text-2xl font-bold tracking-tighter text-[#2C2C2C]">
-                HI<span className="text-hi-dark-orange ml-1.5">IMÓVEIS</span>
+                <span className="text-hi-dark-orange ml-1.5"></span>
               </div>
             </div>
-            <p className="text-neutral-600">onde sua nova história começa.</p>
-            <p className="text-hi-blue mt-2 text-sm font-semibold tracking-wide">CRECI J 074</p>
+            <p className="text-neutral-600"></p>
+            <p className="text-white mt-4 text-xl md:text-2xl font-bold tracking-wide">CRECI J 074</p>
           </div>
 
-          <div className="flex flex-col items-center md:items-start text-neutral-600">
-            <h4 className="text-[#2C2C2C] font-semibold mb-4 text-lg">Nossas Especialidades</h4>
-            <ul className="space-y-2 text-sm">
+          <div className="flex flex-col items-center md:items-start text-black">
+            <h4 className="text-black font-bold mb-4 text-xl md:text-2xl">Nossas Especialidades</h4>
+            <ul className="space-y-3 text-base md:text-lg">
               <li>• Venda de Imóveis</li>
-              <li>• Lotes e Terrenos</li>
+              <li>• Terrenos</li>
               <li>• Construções & Empreendimentos</li>
               <li>• Lançamentos</li>
               <li>• Crédito Imobiliário</li>
             </ul>
           </div>
 
-          <div className="flex flex-col items-center md:items-start text-neutral-600">
-            <h4 className="text-[#2C2C2C] font-semibold mb-4 text-lg">Nosso Escritório</h4>
-            <p className="text-sm mb-1">Rua Buriti, 343 - Jardim de Alah</p>
-            <p className="text-sm mb-1">Sala 04, Rio Branco - Acre</p>
-            <p className="text-sm">CEP: 69915-514</p>
+          <div className="flex flex-col items-center md:items-start text-black">
+            <h4 className="text-black font-bold mb-4 text-xl md:text-2xl">Nosso Escritório</h4>
+            <p className="text-base md:text-lg mb-2">Rua Buriti, 343 - Jardim de Alah</p>
+            <p className="text-base md:text-lg mb-2">Sala 04, Rio Branco - Acre</p>
+            <p className="text-base md:text-lg">CEP: 69915-514</p>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 md:px-12 mt-12 pt-8 border-t border-neutral-200 text-center text-sm text-neutral-600 flex flex-col items-center">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 mt-12 pt-8 border-t border-white/30 text-center text-sm text-white/70 flex flex-col items-center">
           <p>&copy; {new Date().getFullYear()} HI Imóveis e Construções. Todos os direitos reservados.</p>
         </div>
       </footer>

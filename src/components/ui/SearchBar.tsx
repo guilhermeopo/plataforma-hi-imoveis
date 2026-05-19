@@ -34,7 +34,6 @@ export function SearchBar({
       if (intent) params.append("intent", intent);
       if (location) params.append("location", location);
       if (type) params.append("type", type);
-      if (projectTitle) params.append("project", projectTitle);
       if (minPrice) params.append("minPrice", minPrice);
       if (maxPrice) params.append("maxPrice", maxPrice);
     }
@@ -48,7 +47,7 @@ export function SearchBar({
 
   if (searchMode === "codigo") {
     return (
-      <form onSubmit={handleSearch} className="mt-8 max-w-sm w-full mx-auto border border-black p-6 rounded-lg shadow-xl flex flex-col gap-4 text-left" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+      <form onSubmit={handleSearch} className="mt-8 max-w-sm w-full mx-auto border border-white p-6 rounded-lg shadow-xl flex flex-col gap-4 text-left" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div>
           <label className="block text-sm font-semibold text-neutral-700 mb-2">Digite o Código do Imóvel</label>
           <div className="relative">
@@ -64,7 +63,7 @@ export function SearchBar({
             />
           </div>
         </div>
-        <button type="submit" className="w-full bg-[#FFB800] hover:bg-[#E5A500] text-white py-3 rounded-sm font-bold transition-colors mt-2 text-[15px] shadow-sm">
+        <button type="submit" className="w-full text-black py-3 rounded-sm font-bold transition-opacity hover:opacity-90 mt-2 text-[15px] shadow-sm" style={{ backgroundImage: "url('/fundobotao.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
           BUSCAR CÓDIGO
         </button>
         <div className="flex justify-center items-center mt-2 text-neutral-700 text-sm gap-2">
@@ -77,7 +76,7 @@ export function SearchBar({
   }
 
   return (
-    <form onSubmit={handleSearch} className="mt-8 max-w-sm w-full mx-auto border border-black p-6 rounded-lg shadow-xl flex flex-col gap-4 text-left" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+    <form onSubmit={handleSearch} className="mt-8 max-w-sm w-full mx-auto border border-white p-6 rounded-lg shadow-xl flex flex-col gap-4 text-left" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
       <div className="relative">
         <select 
           className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer"
@@ -115,17 +114,7 @@ export function SearchBar({
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
       </div>
 
-      <div className="relative">
-        <select 
-          className="appearance-none w-full border border-neutral-200 text-neutral-500 py-3 px-4 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm cursor-pointer"
-          value={projectTitle}
-          onChange={(e) => setProjectTitle(e.target.value)}
-        >
-          <option value="">Todos os Empreendimentos</option>
-          {projectTitles.map(p => <option key={p} value={p}>{p}</option>)}
-        </select>
-        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
-      </div>
+
 
       <div className="flex flex-row gap-2">
         <div className="relative flex-1">
@@ -150,7 +139,7 @@ export function SearchBar({
 
 
 
-      <button type="submit" className="bg-[#FFB800] hover:bg-[#E5A500] text-white py-3 rounded-sm font-bold transition-colors mt-2 text-[15px] shadow-sm">
+      <button type="submit" className="text-black py-3 rounded-sm font-bold transition-opacity hover:opacity-90 mt-2 text-[15px] shadow-sm" style={{ backgroundImage: "url('/fundobotao.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
         BUSCAR
       </button>
 

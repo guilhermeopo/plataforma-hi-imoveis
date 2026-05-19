@@ -86,3 +86,32 @@ CREATE POLICY "Enable delete projects for all users"
 -- Enable public access for bucket 'properties'
 -- CREATE POLICY "Public Storage Select" ON storage.objects FOR SELECT USING ( bucket_id = 'properties' );
 -- CREATE POLICY "Public Storage Upload" ON storage.objects FOR INSERT WITH CHECK ( bucket_id = 'properties' );
+
+-- Create team_members table
+CREATE TABLE public.team_members (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  name text NOT NULL,
+  role text NOT NULL,
+  image_url text NOT NULL,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Row Level Security for Team Members
+ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Team Members are viewable by everyone."
+  ON public.team_members FOR SELECT
+  USING ( true );
+
+CREATE POLICY "Enable insert team members for all users"
+  ON public.team_members FOR INSERT
+  WITH CHECK ( true );
+
+CREATE POLICY "Enable update team members for all users"
+  ON public.team_members FOR UPDATE
+  USING ( true )
+  WITH CHECK ( true );
+
+CREATE POLICY "Enable delete team members for all users"
+  ON public.team_members FOR DELETE
+  USING ( true );

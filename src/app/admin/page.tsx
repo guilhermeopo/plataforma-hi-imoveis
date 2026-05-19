@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase, type Property, type Project } from "@/lib/supabase";
-import { Trash2, CheckCircle, Image as ImageIcon, Pencil, Building2, Home } from "lucide-react";
+import { supabase, type Property, type Project, type TeamMember } from "@/lib/supabase";
+import { Trash2, CheckCircle, Image as ImageIcon, Pencil, Building2, Home, Users } from "lucide-react";
 import Link from "next/link";
 import NextImage from "next/image";
 import { cn } from "@/lib/utils";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<"properties" | "projects">("properties");
+  const [activeTab, setActiveTab] = useState<"properties" | "projects" | "team">("properties");
   const [properties, setProperties] = useState<Property[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -26,31 +27,41 @@ export default function AdminDashboard() {
     (p.location && p.location.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const filteredTeam = teamMembers.filter(p => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    p.role.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   useEffect(() => {
     fetchData();
   }, []);
 
   async function fetchData() {
     setLoading(true);
-    const [pRes, prjRes] = await Promise.all([
+    const [pRes, prjRes, teamRes] = await Promise.all([
       supabase.from("properties").select("*").order("created_at", { ascending: false }),
-      supabase.from("projects").select("*").order("created_at", { ascending: false })
+      supabase.from("projects").select("*").order("created_at", { ascending: false }),
+      supabase.from("team_members").select("*").order("created_at", { ascending: false })
     ]);
     
     if (pRes.data) setProperties(pRes.data as Property[]);
     if (prjRes.data) setProjects(prjRes.data as Project[]);
+    if (teamRes.data) setTeamMembers(teamRes.data as TeamMember[]);
     setLoading(false);
   }
 
-  async function deleteItem(id: string, type: "properties" | "projects") {
-    if (!window.confirm(`Tem certeza que deseja excluir este ${type === 'properties' ? 'imóvel' : 'empreendimento'}?`)) return;
+  async function deleteItem(id: string, type: "properties" | "projects" | "team") {
+    if (!window.confirm(`Tem certeza que deseja excluir ${type === 'properties' ? 'este imóvel' : type === 'projects' ? 'este empreendimento' : 'este colaborador'}?`)) return;
     
     if (type === "properties") {
       setProperties((prev) => prev.filter((p) => p.id !== id));
       await supabase.from("properties").delete().eq("id", id);
-    } else {
+    } else if (type === "projects") {
       setProjects((prev) => prev.filter((p) => p.id !== id));
       await supabase.from("projects").delete().eq("id", id);
+    } else {
+      setTeamMembers((prev) => prev.filter((p) => p.id !== id));
+      await supabase.from("team_members").delete().eq("id", id);
     }
   }
 
@@ -91,15 +102,21 @@ export default function AdminDashboard() {
           onClick={() => setActiveTab("projects")} 
           className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "projects" ? "bg-hi-blue text-white shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}
         >
-          <Building2 size={18} /> Empreendimentos / Lançamentos
+          <Building2 size={18} /> Empreendimentos
+        </button>
+        <button 
+          onClick={() => setActiveTab("team")} 
+          className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "team" ? "bg-[#2C2C2C] text-white shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}
+        >
+          <Users size={18} /> Equipe
         </button>
 
         <div className="ml-auto w-full md:w-auto mt-4 md:mt-0">
           <Link 
-            href={activeTab === "properties" ? "/admin/add" : "/admin/project-add"} 
-            className={cn("w-full md:w-auto text-white font-medium px-6 py-2.5 rounded-lg shadow-sm transition-colors text-center whitespace-nowrap block", activeTab === "properties" ? "bg-[#d95d29] hover:bg-[#b04a1f]" : "bg-hi-blue hover:bg-[#347Ab7]")}
+            href={activeTab === "properties" ? "/admin/add" : activeTab === "projects" ? "/admin/project-add" : "/admin/team-add"} 
+            className={cn("w-full md:w-auto text-white font-medium px-6 py-2.5 rounded-lg shadow-sm transition-colors text-center whitespace-nowrap block", activeTab === "properties" ? "bg-[#d95d29] hover:bg-[#b04a1f]" : activeTab === "projects" ? "bg-hi-blue hover:bg-[#347Ab7]" : "bg-[#2C2C2C] hover:bg-black")}
           >
-            {activeTab === "properties" ? "+ Cadastrar Imóvel" : "+ Novo Empreendimento"}
+            {activeTab === "properties" ? "+ Cadastrar Imóvel" : activeTab === "projects" ? "+ Novo Empreendimento" : "+ Novo Colaborador"}
           </Link>
         </div>
       </div>
@@ -109,9 +126,9 @@ export default function AdminDashboard() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-neutral-200 bg-neutral-50/50">
-                <th className="p-4 text-sm font-medium text-neutral-500">{activeTab === "properties" ? "Imóvel" : "Empreendimento"}</th>
-                <th className="p-4 text-sm font-medium text-neutral-500">{activeTab === "properties" ? "Tipo" : "Status de Obra"}</th>
-                <th className="p-4 text-sm font-medium text-neutral-500">{activeTab === "properties" ? "Preço" : "A partir de"}</th>
+                <th className="p-4 text-sm font-medium text-neutral-500">{activeTab === "properties" ? "Imóvel" : activeTab === "projects" ? "Empreendimento" : "Colaborador"}</th>
+                <th className="p-4 text-sm font-medium text-neutral-500">{activeTab === "properties" ? "Tipo" : activeTab === "projects" ? "Status de Obra" : "Cargo"}</th>
+                <th className="p-4 text-sm font-medium text-neutral-500">{activeTab === "properties" ? "Preço" : activeTab === "projects" ? "A partir de" : "-"}</th>
                 <th className="p-4 text-sm font-medium text-neutral-500">Status</th>
                 <th className="p-4 text-sm font-medium text-neutral-500 text-right">Ações</th>
               </tr>
@@ -125,7 +142,7 @@ export default function AdminDashboard() {
                     </div>
                   </td>
                 </tr>
-              ) : (activeTab === "properties" ? filteredProperties : filteredProjects).length === 0 ? (
+              ) : (activeTab === "properties" ? filteredProperties : activeTab === "projects" ? filteredProjects : filteredTeam).length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-16 text-center text-neutral-500">
                     <ImageIcon className="mx-auto h-12 w-12 text-neutral-300 mb-4" />
@@ -133,7 +150,7 @@ export default function AdminDashboard() {
                   </td>
                 </tr>
               ) : (
-                (activeTab === "properties" ? filteredProperties : filteredProjects).map((item: Property | Project) => (
+                (activeTab === "properties" ? filteredProperties : activeTab === "projects" ? filteredProjects : filteredTeam).map((item: any) => (
                   <tr key={item.id} className="hover:bg-neutral-50 transition-colors group">
                     <td className="p-4">
                       <div className="flex items-center gap-4">
@@ -157,7 +174,7 @@ export default function AdminDashboard() {
                     </td>
                     
                     {activeTab === "properties" ? (
-                       <td className="p-4">
+                      <td className="p-4">
                         <span className={cn(
                           "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset",
                           (item as Property).type === 'Sale' 
@@ -167,7 +184,7 @@ export default function AdminDashboard() {
                           {(item as Property).type === 'Sale' ? 'Venda' : 'Aluguel'}
                         </span>
                       </td>
-                    ) : (
+                    ) : activeTab === "projects" ? (
                       <td className="p-4">
                         <span className={cn(
                           "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset",
@@ -179,10 +196,12 @@ export default function AdminDashboard() {
                         </span>
                         {(item as Project).stage && <p className="text-xs text-neutral-500 mt-1">{(item as Project).stage}</p>}
                       </td>
+                    ) : (
+                      <td className="p-4"><span className="text-sm font-medium">{item.role}</span></td>
                     )}
                    
                     <td className="p-4 font-bold text-hi-blue">
-                      {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((item as Property).price ?? (item as Project).price_starts_at)}
+                      {activeTab !== "team" ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((item as Property).price ?? (item as Project).price_starts_at) : '-'}
                     </td>
 
                     <td className="p-4">
@@ -195,8 +214,10 @@ export default function AdminDashboard() {
                         )}>
                           {item.status === 'Available' ? 'Disponível' : 'Vendido'}
                         </span>
-                      ) : (
+                      ) : activeTab === "projects" ? (
                         <span className="text-xs text-neutral-500 uppercase tracking-widest">{item.status === 'Ready' ? 'Finalizado' : 'Ativo'}</span>
+                      ) : (
+                        <span className="text-xs text-emerald-500 uppercase tracking-widest">Ativo</span>
                       )}
                     </td>
                     
@@ -211,13 +232,15 @@ export default function AdminDashboard() {
                             <CheckCircle size={20} />
                           </button>
                         )}
-                        <Link 
-                          href={activeTab === "properties" ? `/admin/edit/${item.id}` : `/admin/project-edit/${item.id}`}
-                          title="Editar"
-                          className="p-2 text-neutral-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
-                        >
-                          <Pencil size={20} />
-                        </Link>
+                        {activeTab !== "team" && (
+                          <Link 
+                            href={activeTab === "properties" ? `/admin/edit/${item.id}` : `/admin/project-edit/${item.id}`}
+                            title="Editar"
+                            className="p-2 text-neutral-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Pencil size={20} />
+                          </Link>
+                        )}
                         <button 
                           onClick={() => deleteItem(item.id, activeTab)}
                           title="Excluir"

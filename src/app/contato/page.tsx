@@ -11,7 +11,7 @@ export default function ContatoPage() {
       <div className="h-20 md:h-[90px] bg-white shadow-sm flex-shrink-0 w-full" />
 
       {/* Hero Contato */}
-      <section className="bg-[#d3a300] text-white py-16 md:py-24 px-6 relative overflow-hidden">
+      <section className="bg-[#f4a100] text-white py-16 md:py-24 px-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-[#FFB800]/10 skew-y-2 origin-bottom-right" />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 tracking-tight">Entre em Contato</h1>
