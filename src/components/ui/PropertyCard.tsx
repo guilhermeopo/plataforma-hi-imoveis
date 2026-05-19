@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import { type Property } from "@/lib/supabase";
 import { Play, MapPin } from "lucide-react";
+import Image from "next/image";
 
 export function PropertyCard({ property }: { property: Property }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -42,10 +43,11 @@ export function PropertyCard({ property }: { property: Property }) {
         )}
         
         {/* Fallback image, fades out slightly when video plays */}
-        <img 
+        <Image 
           src={property.main_image_url} 
           alt={property.title} 
-          loading="lazy"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:opacity-50"
         />
 

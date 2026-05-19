@@ -58,7 +58,7 @@ export function Header() {
         <div className="fixed inset-0 z-[100] bg-white flex flex-col pt-6 pb-8 px-6 overflow-y-auto w-full h-screen animate-fade-in-up">
           <div className="flex items-center justify-between mb-16">
             <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="w-[300px] flex items-center">
-              <img src="/logobranca.png" alt="Logo HI" style={{ filter: "drop-shadow(0px 0px 6px white) drop-shadow(0px 0px 10px white) drop-shadow(0px 0px 15px white)" }} className="w-full h-auto object-contain object-left scale-[2] origin-left pointer-events-none" />
+              <Image src="/logobranca.png" alt="Logo HI" width={300} height={100} style={{ filter: "drop-shadow(0px 0px 6px white) drop-shadow(0px 0px 10px white) drop-shadow(0px 0px 15px white)" }} className="w-full h-auto object-contain object-left scale-[2] origin-left pointer-events-none" />
             </Link>
             <button 
               onClick={() => setIsMobileMenuOpen(false)}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, X, Expand } from "lucide-react";
+import Image from "next/image";
 
 export function ImageCarousel({
   mainImage,
@@ -36,10 +37,12 @@ export function ImageCarousel({
   return (
     <div className="relative w-full h-full group">
       {allImages.map((img, idx) => (
-         <img 
+         <Image 
           key={img}
           src={img} 
           alt={`${title} - foto ${idx + 1}`}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           onClick={() => setIsModalOpen(true)}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out cursor-pointer ${idx === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
         />
@@ -91,11 +94,15 @@ export function ImageCarousel({
             <X size={40} />
           </button>
           
-          <img 
-            src={allImages[currentIndex]} 
-            alt={`${title} - foto ampliada ${currentIndex + 1}`}
-            className="max-w-[95vw] max-h-[90vh] object-contain select-none"
-          />
+          <div className="relative w-[95vw] h-[90vh]">
+            <Image 
+              src={allImages[currentIndex]} 
+              alt={`${title} - foto ampliada ${currentIndex + 1}`}
+              fill
+              className="object-contain select-none"
+              sizes="95vw"
+            />
+          </div>
 
           {allImages.length > 1 && (
             <>
