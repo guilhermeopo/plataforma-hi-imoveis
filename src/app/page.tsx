@@ -91,8 +91,6 @@ export default async function Home({
     }
   ] : []);
 
-  const allProjectTitlesRaw = displayProjects.map(p => p.title).filter(Boolean);
-  const allProjectTitles = Array.from(new Set(allProjectTitlesRaw)).sort();
 
   const searchProject = searchParams.project?.toLowerCase() || "";
 
