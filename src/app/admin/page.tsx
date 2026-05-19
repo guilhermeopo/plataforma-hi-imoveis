@@ -156,8 +156,14 @@ export default function AdminDashboard() {
                     <td className="p-4">
                       <div className="flex items-center gap-4">
                         <div className="w-16 h-16 rounded-xl bg-neutral-100 overflow-hidden shrink-0 border border-neutral-200">
-                          {item.main_image_url ? (
-                            <NextImage src={item.main_image_url!} alt={item.title} width={64} height={64} className="w-full h-full object-cover" />
+                          {(item.main_image_url || item.image_url) ? (
+                            <NextImage 
+                              src={activeTab === "team" ? item.image_url : item.main_image_url!} 
+                              alt={activeTab === "team" ? item.name : item.title} 
+                              width={64} 
+                              height={64} 
+                              className="w-full h-full object-cover" 
+                            />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-neutral-400">
                               <ImageIcon size={24} />
@@ -166,10 +172,12 @@ export default function AdminDashboard() {
                         </div>
                         <div className="min-w-0">
                           <p className="font-semibold text-neutral-700 truncate max-w-[200px] md:max-w-xs flex items-center gap-2">
-                            {item.title}
+                            {activeTab === "team" ? item.name : item.title}
                             {item.code && <span className="text-xs bg-neutral-200 text-neutral-600 px-2 py-0.5 rounded-sm">{item.code}</span>}
                           </p>
-                          <p className="text-sm text-neutral-500 truncate max-w-[200px] md:max-w-xs mt-0.5">{item.description}</p>
+                          <p className="text-sm text-neutral-500 truncate max-w-[200px] md:max-w-xs mt-0.5">
+                            {activeTab === "team" ? item.role : item.description}
+                          </p>
                         </div>
                       </div>
                     </td>

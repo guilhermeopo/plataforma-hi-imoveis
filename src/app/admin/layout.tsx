@@ -2,7 +2,6 @@
 
 import { ReactNode } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { LayoutDashboard, PlusCircle, LogOut, Home, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -18,13 +17,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-[#F1F1F1] text-neutral-800 flex">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-neutral-200 flex flex-col hidden md:flex shadow-sm">
-        <div className="p-6 flex items-center gap-3 border-b border-neutral-800/50 pb-8">
-          <div className="w-24 h-16 rounded-full flex items-center justify-center p-1 cursor-pointer hover:scale-105 transition-transform overflow-visible">
-            <Image src="/logobranca.png" alt="Logo" width={96} height={64} className="w-full h-full object-contain object-left scale-[2.5] origin-left" />
-          </div>
-          <h1 className="text-xl font-bold tracking-tighter text-white">
-            HI<span className="text-[#D4AF37] ml-1.5">IMÓVEIS</span>
-          </h1>
+        <div className="p-6 flex items-center gap-3 border-b border-neutral-100 pb-8">
+          <Link href="/" className="flex items-center group">
+            <span className="text-2xl font-black tracking-tighter text-black flex items-baseline select-none italic">
+              HI<span className="ml-1 opacity-90">IMÓVEIS</span>
+            </span>
+          </Link>
         </div>
         
         <nav className="flex-1 px-4 space-y-2 mt-4">

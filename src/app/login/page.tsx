@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
@@ -44,11 +43,10 @@ export default function LoginPage() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-hi-blue/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 animate-fade-in-up flex flex-col items-center">
-        <Link href="/" className="flex flex-col items-center justify-center mb-6 gap-4">
-          <div className="w-64 h-32 rounded-full flex items-center justify-center p-2 transition-transform hover:scale-105">
-            <Image src="/logobranca.png" alt="Logo HI Imóveis" width={256} height={128} className="w-full h-full object-contain scale-[2.5]" />
-          </div>
-          <h2 className="text-3xl font-bold tracking-tight text-[#2C2C2C] font-serif">HI<span className="text-hi-dark-orange ml-2">IMÓVEIS</span></h2>
+        <Link href="/" className="flex items-center justify-center mb-8 gap-4">
+          <span className="text-5xl font-black tracking-tighter text-black select-none italic">
+            HI<span className="ml-1 opacity-90">IMÓVEIS</span>
+          </span>
         </Link>
         <h2 className="text-center text-lg font-medium leading-9 text-neutral-500 mb-8 tracking-wide">
           Acesso Administrativo

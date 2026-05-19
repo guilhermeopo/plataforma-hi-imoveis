@@ -28,6 +28,10 @@ export function SearchBar({
     if (searchMode === "codigo") {
       if (code.trim()) params.append("code", code.trim());
     } else {
+      if (intent === "construir") {
+        router.push("/construir");
+        return;
+      }
       if (intent) params.append("intent", intent);
       if (location) params.append("location", location);
       if (type) params.append("type", type);
@@ -83,6 +87,7 @@ export function SearchBar({
           <option value="">O que deseja?</option>
           <option value="venda">Imóveis à Venda</option>
           <option value="empreendimento">Empreendimentos</option>
+          <option value="construir">Construir do Meu Jeito</option>
         </select>
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
       </div>
