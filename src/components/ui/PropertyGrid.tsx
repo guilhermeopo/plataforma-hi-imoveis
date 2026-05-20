@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PropertyCard } from "./PropertyCard";
 import { Property } from "@/lib/supabase";
+import Link from "next/link";
 
 interface PropertyGridProps {
   properties: Property[];
@@ -10,9 +11,10 @@ interface PropertyGridProps {
   subtitle: string;
   id: string;
   emptyMessage: string;
+  viewAllLink?: string;
 }
 
-export function PropertyGrid({ properties, title, subtitle, id, emptyMessage }: PropertyGridProps) {
+export function PropertyGrid({ properties, title, subtitle, id, emptyMessage, viewAllLink }: PropertyGridProps) {
   const [visibleCount, setVisibleCount] = useState(6);
 
   if (properties.length === 0) {
@@ -36,8 +38,15 @@ export function PropertyGrid({ properties, title, subtitle, id, emptyMessage }: 
           <h2 className="text-3xl md:text-4xl font-bold text-[#2C2C2C] font-serif mb-2 tracking-tight">{title}</h2>
           <p className="text-neutral-600">{subtitle}</p>
         </div>
-        <div className="text-sm font-bold tracking-wider text-hi-blue uppercase bg-white px-5 py-2.5 rounded-full border border-neutral-200 shadow-sm whitespace-nowrap">
-          {properties.length} {properties.length === 1 ? 'disponível' : 'disponíveis'}
+        <div className="flex items-center gap-4">
+          {viewAllLink && (
+            <Link href={viewAllLink} className="text-sm font-bold text-neutral-600 hover:text-hi-blue uppercase transition-colors">
+              Ver Todos →
+            </Link>
+          )}
+          <div className="text-sm font-bold tracking-wider text-hi-blue uppercase bg-white px-5 py-2.5 rounded-full border border-neutral-200 shadow-sm whitespace-nowrap">
+            {properties.length} {properties.length === 1 ? 'disponível' : 'disponíveis'}
+          </div>
         </div>
       </div>
 

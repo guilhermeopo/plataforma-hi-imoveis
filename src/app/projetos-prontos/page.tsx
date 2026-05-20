@@ -191,7 +191,7 @@ export default async function ProjetosProntosPage({
 
       {/* Info Banner */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 pt-12">
-        <div className="bg-[#1a1a2e] text-white rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="bg-gradient-to-r from-[#191919] to-black text-white rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <div className="bg-[#FFB800] p-3 rounded-xl">
               <Hammer size={24} className="text-black" />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ProjectCard } from "./ProjectCard";
 import { Project } from "@/lib/supabase";
+import Link from "next/link";
 
 interface ProjectGridProps {
   projects: Project[];
@@ -10,9 +11,10 @@ interface ProjectGridProps {
   subtitle: string;
   id: string;
   emptyMessage: string;
+  viewAllLink?: string;
 }
 
-export function ProjectGrid({ projects, title, subtitle, id, emptyMessage }: ProjectGridProps) {
+export function ProjectGrid({ projects, title, subtitle, id, emptyMessage, viewAllLink }: ProjectGridProps) {
   const [visibleCount, setVisibleCount] = useState(6);
 
   if (projects.length === 0) {
@@ -36,8 +38,15 @@ export function ProjectGrid({ projects, title, subtitle, id, emptyMessage }: Pro
           <h2 className="text-3xl md:text-4xl font-bold text-[#2C2C2C] font-serif mb-2 tracking-tight">{title}</h2>
           <p className="text-neutral-600">{subtitle}</p>
         </div>
-        <div className="text-sm font-bold tracking-wider text-[#d95d29] uppercase bg-white px-5 py-2.5 rounded-full border border-[#d95d29]/20 shadow-sm whitespace-nowrap">
-          {projects.length} {projects.length === 1 ? 'lançamento' : 'lançamentos'}
+        <div className="flex items-center gap-4">
+          {viewAllLink && (
+            <Link href={viewAllLink} className="text-sm font-bold text-neutral-600 hover:text-[#d95d29] uppercase transition-colors">
+              Ver Todos →
+            </Link>
+          )}
+          <div className="text-sm font-bold tracking-wider text-[#d95d29] uppercase bg-white px-5 py-2.5 rounded-full border border-[#d95d29]/20 shadow-sm whitespace-nowrap">
+            {projects.length} {projects.length === 1 ? 'lançamento' : 'lançamentos'}
+          </div>
         </div>
       </div>
 

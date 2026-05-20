@@ -211,6 +211,7 @@ export default async function Home({
             subtitle="Oportunidades exclusivas para aquisição do seu novo patrimônio."
             emptyMessage="Nenhum imóvel à venda encontrado no momento com estes critérios."
             properties={salesProperties}
+            viewAllLink="/imoveis"
           />
         )}
 
@@ -221,6 +222,7 @@ export default async function Home({
             subtitle="Explore lançamentos e projetos em construção ideais para investir ou morar."
             emptyMessage="Nenhum empreendimento ativo encontrado com estes critérios."
             projects={filteredProjects}
+            viewAllLink="/empreendimentos"
           />
         )}
 
@@ -260,7 +262,7 @@ export default async function Home({
       </div>
 
       {/* Projetos Prontos CTA */}
-      <section className="bg-[#1a1a2e] py-20 px-6 md:px-12">
+      <section className="bg-gradient-to-br from-[#191919] to-black py-20 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
           <div className="text-center md:text-left max-w-xl">
             <div className="inline-flex items-center gap-2 bg-[#FFB800]/20 text-[#FFB800] border border-[#FFB800]/30 px-4 py-1.5 rounded-full text-xs font-bold mb-5">
