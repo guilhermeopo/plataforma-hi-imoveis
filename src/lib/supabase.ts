@@ -74,3 +74,18 @@ export type TeamMember = {
   image_url: string;
   created_at: string;
 };
+
+export type ArchitecturalPlan = {
+  id: string;
+  title: string;
+  description: string;
+  area_m2: number;
+  bedrooms: number;
+  suites: number;
+  style: string;
+  price: number;
+  main_image_url: string;
+  gallery_urls: string[] | null;
+  created_at: string;
+};
+

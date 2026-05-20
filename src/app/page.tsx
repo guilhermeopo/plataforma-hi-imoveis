@@ -234,6 +234,39 @@ export default async function Home({
         </div>
       </div>
 
+      {/* Projetos Prontos CTA */}
+      <section className="bg-[#1a1a2e] py-20 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="text-center md:text-left max-w-xl">
+            <div className="inline-flex items-center gap-2 bg-[#FFB800]/20 text-[#FFB800] border border-[#FFB800]/30 px-4 py-1.5 rounded-full text-xs font-bold mb-5">
+              🏗️ NOVO
+            </div>
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4">
+              Plantas Prontas para<br />
+              <span className="text-[#FFB800]">Construção</span>
+            </h2>
+            <p className="text-neutral-400 text-base mb-8">
+              Projetos arquitetônicos desenvolvidos pela nossa equipe. Compre a planta e construa com segurança, qualidade e prazo garantido.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+              <a href="/projetos-prontos" className="bg-[#FFB800] text-black font-bold px-8 py-4 rounded-xl hover:bg-[#f0a800] transition-all hover:-translate-y-1 shadow-lg shadow-[#FFB800]/20">
+                Ver Projetos →
+              </a>
+              <a href="/construir" className="border border-white/20 text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-all">
+                Construir do Meu Jeito
+              </a>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 w-full max-w-sm mx-auto md:mx-0">
+            {["Moderno", "Clássico", "Rústico", "Contemporâneo"].map((style, i) => (
+              <a key={style} href={`/projetos-prontos?style=${style}`} className={`bg-white/5 border border-white/10 rounded-xl p-4 text-center hover:bg-[#FFB800]/10 hover:border-[#FFB800]/30 transition-all group ${i === 0 ? "col-span-2 md:col-span-1" : ""}`}>
+                <p className="text-white font-bold text-sm group-hover:text-[#FFB800] transition-colors">{style}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-16 border-t border-neutral-200 mt-20" style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">

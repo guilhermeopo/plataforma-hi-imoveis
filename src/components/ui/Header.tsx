@@ -28,8 +28,9 @@ export function Header() {
             {/* Desktop Links */}
             <nav className="hidden lg:flex items-center gap-8 font-sans text-sm font-bold text-white">
               <Link href="/sobre" className="hover:text-neutral-200 transition-colors">Sobre nós</Link>
-              <Link href="/#venda" className="hover:text-white transition-colors">Imóveis</Link>
-              <Link href="/#empreendimentos" className="hover:text-white transition-colors">Empreendimentos</Link>
+              <Link href="/imoveis" className="hover:text-white transition-colors">Imóveis</Link>
+              <Link href="/empreendimentos" className="hover:text-white transition-colors">Empreendimentos</Link>
+              <Link href="/projetos-prontos" className="hover:text-white transition-colors">Projetos</Link>
               <Link href="/contato" className="hover:text-white transition-colors">Contato</Link>
             </nav>
 
@@ -69,8 +70,9 @@ export function Header() {
           
           <nav className="flex flex-col gap-8 text-3xl font-serif font-bold text-white mb-12 flex-1 items-stretch justify-start">
             <Link href="/sobre" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-black transition-colors border-b border-white/20 pb-4">Sobre nós</Link>
-            <Link href="/#venda" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-black transition-colors border-b border-white/20 pb-4">Imóveis</Link>
-            <Link href="/#empreendimentos" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-black transition-colors border-b border-white/20 pb-4">Empreendimentos</Link>
+            <Link href="/imoveis" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-black transition-colors border-b border-white/20 pb-4">Imóveis</Link>
+            <Link href="/empreendimentos" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-black transition-colors border-b border-white/20 pb-4">Empreendimentos</Link>
+            <Link href="/projetos-prontos" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-black transition-colors border-b border-white/20 pb-4">Projetos</Link>
             <Link href="/contato" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-black transition-colors border-b border-white/20 pb-4">Contato</Link>
           </nav>
           
