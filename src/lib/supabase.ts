@@ -44,6 +44,7 @@ export type Property = {
   video_url: string | null;
   broker_name?: string | null;
   broker_whatsapp?: string | null;
+  captador_id?: string | null;
   created_at: string;
 };
 
@@ -64,6 +65,7 @@ export type Project = {
   video_url: string | null;
   broker_name?: string | null;
   broker_whatsapp?: string | null;
+  captador_id?: string | null;
   created_at: string;
 };
 
@@ -92,6 +94,7 @@ export type ArchitecturalPlan = {
   video_url?: string | null;
   broker_name?: string | null;
   broker_whatsapp?: string | null;
+  captador_id?: string | null;
   created_at: string;
 };
 

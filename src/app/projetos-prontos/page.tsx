@@ -121,7 +121,7 @@ export default async function ProjetosProntosPage({
       <Header />
 
       {/* Hero */}
-      <section className="relative pt-40 pb-24 px-6 overflow-hidden bg-[#1a1a2e]">
+      <section className="relative pt-40 pb-24 px-6 overflow-hidden bg-[#191919]">
         {/* Grid pattern background */}
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "linear-gradient(rgba(255,184,0,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,184,0,0.4) 1px, transparent 1px)",
@@ -197,7 +197,7 @@ export default async function ProjetosProntosPage({
               <Hammer size={24} className="text-black" />
             </div>
             <div>
-              <p className="font-bold text-lg">Construção com a HI</p>
+              <p className="font-bold text-lg">Construção com a HI Imóveis e construções</p>
               <p className="text-neutral-400 text-sm">Compre a planta e contrate a construção com nossa equipe. Entrega garantida.</p>
             </div>
           </div>

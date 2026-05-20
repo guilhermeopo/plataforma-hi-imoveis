@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { AreaChart, BedDouble, Star, Bath, Car, ArrowLeft, Ruler } from "lucide-react";
+import { GalleryLightbox } from "@/components/ui/GalleryLightbox";
 
 export const revalidate = 0;
 
@@ -22,6 +23,16 @@ export default async function PlanDetailPage({ params }: { params: { id: string 
     .select("*")
     .eq("id", params.id)
     .single();
+
+  let captador = null;
+  if (plan?.captador_id) {
+    const { data: captadorData } = await supabase
+      .from("team_members")
+      .select("*")
+      .eq("id", plan.captador_id)
+      .single();
+    captador = captadorData;
+  }
 
   if (error || !plan) {
     notFound();
@@ -130,45 +141,40 @@ export default async function PlanDetailPage({ params }: { params: { id: string 
           {/* Renders Gallery */}
           {galleryImages.length > 0 && (
             <div className="bg-white rounded-2xl border border-neutral-200 p-8 shadow-sm">
-              <h2 className="text-xl font-bold text-neutral-800 mb-6">Renders e Visualizações</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {galleryImages.map((url, i) => (
-                  <div key={i} className="relative aspect-video rounded-xl overflow-hidden bg-neutral-100">
-                    <Image src={url} alt={`Render ${i + 1}`} fill className="object-cover hover:scale-105 transition-transform duration-500" />
-                  </div>
-                ))}
-              </div>
+              <h2 className="text-xl font-bold text-neutral-800 mb-6 font-serif tracking-tight">Renders e Visualizações</h2>
+              <GalleryLightbox images={galleryImages} />
             </div>
           )}
 
           {/* Floor Plans */}
           {floorPlans.length > 0 && (
             <div className="bg-white rounded-2xl border border-neutral-200 p-8 shadow-sm">
-              <h2 className="text-xl font-bold text-neutral-800 mb-2">📐 Plantas Baixas</h2>
+              <h2 className="text-xl font-bold text-neutral-800 mb-2 font-serif tracking-tight">📐 Plantas Baixas</h2>
               <p className="text-sm text-neutral-500 mb-6">Visualize os ambientes e a distribuição dos espaços.</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {floorPlans.map((url, i) => (
-                  <div key={i} className="relative rounded-xl overflow-hidden border border-neutral-200 bg-neutral-50">
-                    <Image src={url} alt={`Planta ${i + 1}`} width={800} height={600} className="w-full h-auto object-contain" />
-                  </div>
-                ))}
-              </div>
+              <GalleryLightbox images={floorPlans} />
             </div>
           )}
 
           {/* Video */}
           {plan.video_url && (
             <div className="bg-white rounded-2xl border border-neutral-200 p-8 shadow-sm">
-              <h2 className="text-xl font-bold text-neutral-800 mb-4">🎬 Tour Virtual</h2>
-              <div className="aspect-video rounded-xl overflow-hidden bg-neutral-900">
+              <h2 className="text-xl font-bold text-neutral-800 mb-4 flex items-center gap-2">
+                {plan.video_url.includes("instagram.com") ? "📱 Reel do Projeto" : "🎬 Tour Virtual"}
+              </h2>
+              <div className="aspect-[9/16] max-w-[400px] mx-auto md:aspect-video md:max-w-none rounded-xl overflow-hidden bg-neutral-900 border border-neutral-200">
                 <iframe
-                  src={plan.video_url.replace("watch?v=", "embed/").replace("youtu.be/", "www.youtube.com/embed/")}
+                  src={
+                    plan.video_url.includes("instagram.com")
+                      ? `${plan.video_url.split('?')[0].replace(/\/$/, '')}/embed/`
+                      : plan.video_url.replace("watch?v=", "embed/").replace("youtu.be/", "www.youtube.com/embed/")
+                  }
                   className="w-full h-full"
                   allowFullScreen
                 />
               </div>
             </div>
           )}
+
         </div>
 
         {/* Right — Pricing & CTA */}
@@ -215,6 +221,27 @@ export default async function PlanDetailPage({ params }: { params: { id: string 
           <Link href="/projetos-prontos" className="flex items-center gap-2 text-sm text-neutral-500 hover:text-neutral-800 transition-colors font-medium">
             <ArrowLeft size={14} /> Ver todos os projetos
           </Link>
+
+          {/* Captador Section - Premium Minimalist */}
+          {captador && (
+            <div className="mt-12 pt-10 border-t border-neutral-100">
+              <div className="bg-white/50 backdrop-blur-sm rounded-3xl p-5 border border-neutral-200/60 shadow-sm flex items-center gap-5 group hover:border-amber-200/50 transition-all duration-500">
+                <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-white shadow-md flex-shrink-0">
+                  <img 
+                    src={captador.image_url} 
+                    alt={captador.name} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 transition-opacity" />
+                </div>
+                <div>
+                  <span className="inline-block px-2 py-0.5 rounded-full bg-neutral-100 text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-1.5 group-hover:bg-amber-50 group-hover:text-amber-600 transition-colors">Captação Especializada</span>
+                  <h3 className="text-sm font-black text-[#2C2C2C] leading-none">{captador.name}</h3>
+                </div>
+              </div>
+              <p className="text-[9px] text-neutral-300 text-center mt-4 uppercase tracking-[0.3em] font-medium">Curadoria HI Imóveis</p>
+            </div>
+          )}
         </div>
       </section>
 

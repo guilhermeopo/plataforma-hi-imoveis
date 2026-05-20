@@ -32,6 +32,32 @@ export function SearchBar({
         router.push("/construir");
         return;
       }
+
+      if (intent === "projetos") {
+        if (type) params.append("style", type);
+        if (minPrice) params.append("minArea", minPrice);
+        if (maxPrice) params.append("maxArea", maxPrice);
+        router.push(`/projetos-prontos?${params.toString()}`);
+        return;
+      }
+
+      if (intent === "venda") {
+        if (location) params.append("neighborhood", location);
+        if (type) params.append("type", type);
+        if (minPrice) params.append("minPrice", minPrice);
+        if (maxPrice) params.append("maxPrice", maxPrice);
+        router.push(`/imoveis?${params.toString()}`);
+        return;
+      }
+
+      if (intent === "empreendimento") {
+        if (location) params.append("neighborhood", location);
+        if (minPrice) params.append("minPrice", minPrice);
+        if (maxPrice) params.append("maxPrice", maxPrice);
+        router.push(`/empreendimentos?${params.toString()}`);
+        return;
+      }
+
       if (intent) params.append("intent", intent);
       if (location) params.append("location", location);
       if (type) params.append("type", type);
@@ -87,6 +113,7 @@ export function SearchBar({
           <option value="">O que deseja?</option>
           <option value="venda">Imóveis à Venda</option>
           <option value="empreendimento">Empreendimentos</option>
+          <option value="projetos">Projetos Disponíveis</option>
           <option value="construir">Construir do Meu Jeito</option>
         </select>
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" size={16} />
@@ -122,7 +149,7 @@ export function SearchBar({
         <div className="relative flex-1">
           <input 
             type="number"
-            placeholder="Valor mín. (R$)"
+            placeholder={intent === "projetos" ? "Área mín. (m²)" : "Valor mín. (R$)"}
             className="w-full border border-neutral-200 text-neutral-800 py-3 px-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm placeholder-neutral-500"
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
@@ -131,7 +158,7 @@ export function SearchBar({
         <div className="relative flex-1">
           <input 
             type="number"
-            placeholder="Valor máx. (R$)"
+            placeholder={intent === "projetos" ? "Área máx. (m²)" : "Valor máx. (R$)"}
             className="w-full border border-neutral-200 text-neutral-800 py-3 px-3 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#FFB800] focus:border-[#FFB800] bg-white font-medium text-sm placeholder-neutral-500"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}

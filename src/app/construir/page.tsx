@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { Header } from "@/components/ui/Header";
-import { ArrowRight, ArrowLeft, Home, Map, Hammer, Sofa, Waves, Trees } from "lucide-react";
+import { ArrowRight, ArrowLeft, Home, Map, Hammer, Sofa, Waves, Trees, Building2, Shield, Sparkles, Zap, Leaf, Gem } from "lucide-react";
 import Image from "next/image";
 
 type StepData = {
   terreno: string;
+  tipo: string;
   estilo: string;
   quartos: string;
+  padrao: string;
   lazer: string[];
 };
 
@@ -16,26 +18,28 @@ export default function ConstruirPage() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<StepData>({
     terreno: "",
+    tipo: "",
     estilo: "",
     quartos: "",
+    padrao: "",
     lazer: [],
   });
 
-  const nextStep = () => setStep((s) => Math.min(s + 1, 5));
+  const nextStep = () => setStep((s) => Math.min(s + 1, 7));
   const prevStep = () => setStep((s) => Math.max(s - 1, 1));
 
   const toggleLazer = (item: string) => {
     setData(prev => ({
       ...prev,
-      lazer: prev.lazer.includes(item) 
+      lazer: prev.lazer.includes(item)
         ? prev.lazer.filter(i => i !== item)
         : [...prev.lazer, item]
     }));
   };
 
   const handleFinish = () => {
-    const text = `Olá, vim pelo "Construir do Meu Jeito"!%0A%0A*Briefing da Casa dos Meus Sonhos:*%0A- Terreno: ${data.terreno}%0A- Estilo Preferido: ${data.estilo}%0A- Quartos: ${data.quartos}%0A- Lazer & Essenciais: ${data.lazer.join(", ") || "Nenhum"}`;
-    window.open(`https://wa.me/5568999014456?text=${text}`, '_blank');
+    const text = `Olá, vim pelo "Construir do Meu Jeito"!%0A%0A*Briefing da Casa dos Meus Sonhos:*%0A- Terreno: ${data.terreno}%0A- Tipo de Construção: ${data.tipo}%0A- Estilo Preferido: ${data.estilo}%0A- Quartos: ${data.quartos}%0A- Padrão de Acabamento: ${data.padrao}%0A- Diferenciais & Lazer: ${data.lazer.join(", ") || "Nenhum"}`;
+    window.open(`https://wa.me/5568999299010?text=${text}`, '_blank');
   };
 
   return (
@@ -59,10 +63,10 @@ export default function ConstruirPage() {
       {/* Gamified Form */}
       <section className="max-w-3xl mx-auto px-6 -mt-20 relative z-20">
         <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-neutral-100">
-          
+
           {/* Progress Bar */}
           <div className="flex gap-2 mb-12">
-            {[1, 2, 3, 4].map(i => (
+            {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? 'bg-[#FFB800]' : 'bg-neutral-100'}`} />
             ))}
           </div>
@@ -73,15 +77,15 @@ export default function ConstruirPage() {
               <div className="animate-fade-in-up">
                 <h2 className="text-3xl font-bold font-serif text-[#2C2C2C] mb-8">Antes de tudo, você já tem o terreno?</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <button 
-                    onClick={() => { setData({...data, terreno: "Já possuo o terreno"}); nextStep(); }}
+                  <button
+                    onClick={() => { setData({ ...data, terreno: "Já possuo o terreno" }); nextStep(); }}
                     className={`p-6 border-2 rounded-2xl flex flex-col items-center gap-4 text-center transition-all ${data.terreno === "Já possuo o terreno" ? 'border-[#FFB800] bg-[#FFB800]/5' : 'border-neutral-200 hover:border-neutral-300'}`}
                   >
                     <Map size={48} className={data.terreno === "Já possuo o terreno" ? 'text-[#FFB800]' : 'text-neutral-400'} />
                     <span className="font-bold text-lg text-neutral-800">Sim, já tenho o terreno</span>
                   </button>
-                  <button 
-                    onClick={() => { setData({...data, terreno: "Preciso de um terreno"}); nextStep(); }}
+                  <button
+                    onClick={() => { setData({ ...data, terreno: "Preciso de um terreno" }); nextStep(); }}
                     className={`p-6 border-2 rounded-2xl flex flex-col items-center gap-4 text-center transition-all ${data.terreno === "Preciso de um terreno" ? 'border-[#FFB800] bg-[#FFB800]/5' : 'border-neutral-200 hover:border-neutral-300'}`}
                   >
                     <Home size={48} className={data.terreno === "Preciso de um terreno" ? 'text-[#FFB800]' : 'text-neutral-400'} />
@@ -93,12 +97,34 @@ export default function ConstruirPage() {
 
             {step === 2 && (
               <div className="animate-fade-in-up">
+                <h2 className="text-3xl font-bold font-serif text-[#2C2C2C] mb-8">Qual o tipo de projeto ideal para você?</h2>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {[
+                    { label: 'Casa Térrea', icon: <Home size={32} /> },
+                    { label: 'Sobrado / 2 Andares', icon: <Building2 size={32} /> },
+                    { label: 'Condomínio Fechado', icon: <Shield size={32} /> }
+                  ].map(tipo => (
+                    <button
+                      key={tipo.label}
+                      onClick={() => { setData({ ...data, tipo: tipo.label }); nextStep(); }}
+                      className={`p-6 border-2 rounded-2xl flex flex-col items-center justify-center gap-4 text-center transition-all h-40 ${data.tipo === tipo.label ? 'border-[#FFB800] bg-[#FFB800]/5' : 'border-neutral-200 hover:border-neutral-300'}`}
+                    >
+                      <div className={data.tipo === tipo.label ? 'text-[#FFB800]' : 'text-neutral-400'}>{tipo.icon}</div>
+                      <span className="font-bold text-md text-neutral-800">{tipo.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="animate-fade-in-up">
                 <h2 className="text-3xl font-bold font-serif text-[#2C2C2C] mb-8">Qual estilo arquitetônico mais te agrada?</h2>
                 <div className="grid sm:grid-cols-3 gap-4">
                   {['Moderno / Reto', 'Clássico', 'Rústico / Madeira'].map(estilo => (
-                    <button 
+                    <button
                       key={estilo}
-                      onClick={() => { setData({...data, estilo}); nextStep(); }}
+                      onClick={() => { setData({ ...data, estilo }); nextStep(); }}
                       className={`p-6 border-2 rounded-2xl flex flex-col items-center justify-center gap-4 text-center transition-all h-40 ${data.estilo === estilo ? 'border-[#FFB800] bg-[#FFB800]/5' : 'border-neutral-200 hover:border-neutral-300'}`}
                     >
                       <Hammer size={32} className={data.estilo === estilo ? 'text-[#FFB800]' : 'text-neutral-400'} />
@@ -109,14 +135,14 @@ export default function ConstruirPage() {
               </div>
             )}
 
-            {step === 3 && (
+            {step === 4 && (
               <div className="animate-fade-in-up">
                 <h2 className="text-3xl font-bold font-serif text-[#2C2C2C] mb-8">Quantos quartos são necessários?</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {['2 Quartos', '3 Quartos', '4 Quartos', '5+ Quartos'].map(q => (
-                    <button 
+                    <button
                       key={q}
-                      onClick={() => { setData({...data, quartos: q}); nextStep(); }}
+                      onClick={() => { setData({ ...data, quartos: q }); nextStep(); }}
                       className={`py-4 border-2 rounded-2xl flex items-center justify-center font-bold transition-all ${data.quartos === q ? 'border-[#FFB800] bg-[#FFB800]/10 text-neutral-900' : 'border-neutral-200 text-neutral-500 hover:border-neutral-300'}`}
                     >
                       {q}
@@ -126,29 +152,56 @@ export default function ConstruirPage() {
               </div>
             )}
 
-            {step === 4 && (
+            {step === 5 && (
+              <div className="animate-fade-in-up">
+                <h2 className="text-3xl font-bold font-serif text-[#2C2C2C] mb-8">Qual o padrão de acabamento esperado?</h2>
+                <div className="grid sm:grid-cols-3 gap-4">
+                  {[
+                    { label: 'Padrão / Excelente custo-benefício', icon: <Hammer size={32} /> },
+                    { label: 'Alto Padrão / Acabamentos refinados', icon: <Sparkles size={32} /> },
+                    { label: 'Luxo / Materiais exclusivos e grifes', icon: <Gem size={32} /> }
+                  ].map(padrao => (
+                    <button
+                      key={padrao.label.split(' / ')[0]}
+                      onClick={() => { setData({ ...data, padrao: padrao.label.split(' / ')[0] }); nextStep(); }}
+                      className={`p-6 border-2 rounded-2xl flex flex-col items-center justify-center gap-4 text-center transition-all h-48 ${data.padrao === padrao.label.split(' / ')[0] ? 'border-[#FFB800] bg-[#FFB800]/5' : 'border-neutral-200 hover:border-neutral-300'}`}
+                    >
+                      <div className={data.padrao === padrao.label.split(' / ')[0] ? 'text-[#FFB800]' : 'text-neutral-400'}>{padrao.icon}</div>
+                      <div>
+                        <span className="font-bold text-md text-neutral-800 block mb-1">{padrao.label.split(' / ')[0]}</span>
+                        <span className="text-sm text-neutral-500 font-medium">{padrao.label.split(' / ')[1]}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {step === 6 && (
               <div className="animate-fade-in-up">
                 <h2 className="text-3xl font-bold font-serif text-[#2C2C2C] mb-8">O que não pode faltar no seu projeto?</h2>
-                <p className="text-neutral-500 mb-6 font-medium">Selecione quantas opções desejar.</p>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <p className="text-neutral-500 mb-6 font-medium">Selecione quantas opções desejar e focaremos na sua qualidade de vida.</p>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                   {[
-                    { label: 'Piscina', icon: <Waves size={24} /> },
+                    { label: 'Piscina / Ofurô', icon: <Waves size={24} /> },
                     { label: 'Área Gourmet', icon: <Sofa size={24} /> },
                     { label: 'Jardim Amplo', icon: <Trees size={24} /> },
-                    { label: 'Escritório', icon: <Home size={24} /> },
+                    { label: 'Escritório / Home Office', icon: <Home size={24} /> },
+                    { label: 'Energia Solar', icon: <Zap size={24} /> },
+                    { label: 'Captação de Água', icon: <Leaf size={24} /> },
                   ].map(Item => (
-                    <button 
+                    <button
                       key={Item.label}
                       onClick={() => toggleLazer(Item.label)}
-                      className={`p-4 border-2 rounded-2xl flex flex-col items-center justify-center gap-3 transition-all ${data.lazer.includes(Item.label) ? 'border-[#FFB800] bg-[#FFB800]/5 text-[#FFB800]' : 'border-neutral-200 text-neutral-500 hover:border-neutral-300'}`}
+                      className={`p-4 border-2 rounded-2xl flex flex-row items-center gap-4 transition-all ${data.lazer.includes(Item.label) ? 'border-[#FFB800] bg-[#FFB800]/5 text-[#FFB800]' : 'border-neutral-200 text-neutral-500 hover:border-neutral-300'}`}
                     >
                       {Item.icon}
-                      <span className="font-bold text-sm text-neutral-800 text-center">{Item.label}</span>
+                      <span className="font-bold text-sm text-neutral-800 text-left">{Item.label}</span>
                     </button>
                   ))}
                 </div>
                 <div className="flex justify-end mt-4">
-                   <button 
+                  <button
                     onClick={handleFinish}
                     className="bg-[#2C2C2C] hover:bg-black text-white font-bold px-8 py-4 rounded-xl shadow-lg transition-transform hover:-translate-y-1 flex items-center group"
                   >
@@ -166,7 +219,7 @@ export default function ConstruirPage() {
                 <ArrowLeft size={16} className="mr-2" /> Voltar
               </button>
             ) : <div />}
-            <span className="text-sm font-bold text-neutral-300">Etapa {step} de 4</span>
+            <span className="text-sm font-bold text-neutral-300">Etapa {step} de 6</span>
           </div>
 
         </div>

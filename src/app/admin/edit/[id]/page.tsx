@@ -30,21 +30,24 @@ export default function EditPropertyPage() {
     video_url: "",
     broker_name: "",
     broker_whatsapp: "",
+    captador_id: "",
     is_featured: false,
   });
   const [existingMainImage, setExistingMainImage] = useState("");
   const [existingGallery, setExistingGallery] = useState<string[]>([]);
 
-  const [options, setOptions] = useState<{ neighborhoods: string[], propertyTypes: string[] }>({ neighborhoods: [], propertyTypes: [] });
+  const [options, setOptions] = useState<{ neighborhoods: string[], propertyTypes: string[], team: any[] }>({ neighborhoods: [], propertyTypes: [], team: [] });
 
   useEffect(() => {
-    supabase.from("system_options").select("*").then(({ data }) => {
-      if (data) {
-        setOptions({
-          neighborhoods: data.filter(d => d.type === 'neighborhood').map(d => d.value).sort(),
-          propertyTypes: data.filter(d => d.type === 'property_type').map(d => d.value).sort()
-        });
-      }
+    Promise.all([
+      supabase.from("system_options").select("*"),
+      supabase.from("team_members").select("*").order("name")
+    ]).then(([{ data: optionsData }, { data: teamData }]) => {
+      setOptions({
+        neighborhoods: optionsData?.filter(d => d.type === 'neighborhood').map(d => d.value).sort() || [],
+        propertyTypes: optionsData?.filter(d => d.type === 'property_type').map(d => d.value).sort() || [],
+        team: teamData || []
+      });
     });
   }, []);
 
@@ -80,6 +83,7 @@ export default function EditPropertyPage() {
           video_url: data.video_url || "",
           broker_name: data.broker_name || "",
           broker_whatsapp: data.broker_whatsapp || "",
+          captador_id: data.captador_id || "",
           is_featured: data.is_featured || false,
         });
         setExistingMainImage(data.main_image_url || "");
@@ -161,6 +165,7 @@ export default function EditPropertyPage() {
         video_url: formData.video_url || null,
         broker_name: formData.broker_name || null,
         broker_whatsapp: formData.broker_whatsapp || null,
+        captador_id: formData.captador_id || null,
         is_featured: formData.is_featured,
       }).eq("id", id);
 
@@ -365,12 +370,28 @@ export default function EditPropertyPage() {
 
         <div className="bg-white p-8 rounded-2xl border border-neutral-200 space-y-6 shadow-sm">
           <div className="flex items-center gap-3 border-b border-neutral-100 pb-4 mb-6">
-            <h2 className="text-xl font-semibold text-[#2C2C2C]">Atribuição do Corretor Responsável</h2>
+            <h2 className="text-xl font-semibold text-[#2C2C2C]">Responsividade e Captação</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">Nome do Corretor Oficial</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">Captador do Imóvel (Equipe)</label>
+              <select 
+                className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all appearance-none cursor-pointer"
+                value={formData.captador_id}
+                onChange={(e) => setFormData({...formData, captador_id: e.target.value})}
+              >
+                <option value="">Selecione quem captou o imóvel...</option>
+                {options.team.map(member => (
+                  <option key={member.id} value={member.id}>{member.name} ({member.role})</option>
+                ))}
+              </select>
+              <p className="text-xs text-neutral-500 mt-2">O captador aparecerá com foto na página do imóvel.</p>
+            </div>
+            <div className="hidden md:block"></div>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">Nome do Corretor de Venda (Visual)</label>
               <input 
                 type="text" 
                 className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 placeholder-neutral-400 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
@@ -378,10 +399,9 @@ export default function EditPropertyPage() {
                 value={formData.broker_name}
                 onChange={(e) => setFormData({...formData, broker_name: e.target.value})}
               />
-              <p className="text-xs text-neutral-500 mt-2">Irá aparecer para o cliente (Ex: &quot;Fale com Ana Silva&quot;).</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">WhatsApp Direto do Corretor</label>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">WhatsApp do Corretor</label>
               <input 
                 type="tel" 
                 className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 placeholder-neutral-400 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
@@ -389,7 +409,6 @@ export default function EditPropertyPage() {
                 value={formData.broker_whatsapp}
                 onChange={(e) => setFormData({...formData, broker_whatsapp: e.target.value})}
               />
-              <p className="text-xs text-neutral-500 mt-2">Insira com DDI e DDD apenas números. Ex: 5511999999999</p>
             </div>
           </div>
         </div>

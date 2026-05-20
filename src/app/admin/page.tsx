@@ -16,14 +16,14 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredProperties = properties.filter(p => 
-    p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredProperties = properties.filter(p =>
+    p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (p.code && p.code.toLowerCase().includes(searchQuery.toLowerCase())) ||
     (p.location && p.location.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const filteredProjects = projects.filter(p => 
-    p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredProjects = projects.filter(p =>
+    p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     (p.code && p.code.toLowerCase().includes(searchQuery.toLowerCase())) ||
     (p.location && p.location.toLowerCase().includes(searchQuery.toLowerCase()))
   );
@@ -33,8 +33,8 @@ export default function AdminDashboard() {
     p.style.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredTeam = teamMembers.filter(p => 
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredTeam = teamMembers.filter(p =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     p.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -50,7 +50,7 @@ export default function AdminDashboard() {
       supabase.from("architectural_plans").select("*").order("created_at", { ascending: false }),
       supabase.from("team_members").select("*").order("created_at", { ascending: false })
     ]);
-    
+
     if (pRes.data) setProperties(pRes.data as Property[]);
     if (prjRes.data) setProjects(prjRes.data as Project[]);
     if (plnsRes.data) setPlans(plnsRes.data as ArchitecturalPlan[]);
@@ -85,7 +85,7 @@ export default function AdminDashboard() {
           <p className="text-neutral-600 mt-1">Gerencie seu portfólio de imóveis e grandes empreendimentos.</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-          <input 
+          <input
             type="text"
             placeholder="Pesquisar..."
             className="w-full sm:w-64 bg-white border border-neutral-200 rounded-lg px-4 py-2.5 text-sm font-medium text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-hi-blue focus:ring-1 focus:ring-hi-blue shadow-sm"
@@ -103,15 +103,15 @@ export default function AdminDashboard() {
           <Building2 size={18} /> Empreendimentos
         </button>
         <button onClick={() => setActiveTab("plans")} className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "plans" ? "bg-[#FFB800] text-black shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}>
-          <Ruler size={18} /> Projetos Prontos
+          <Ruler size={18} /> Projetos Disponíveis
         </button>
         <button onClick={() => setActiveTab("team")} className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "team" ? "bg-[#2C2C2C] text-white shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}>
           <Users size={18} /> Equipe
         </button>
 
         <div className="ml-auto w-full md:w-auto mt-4 md:mt-0">
-          <Link 
-            href={activeTab === "properties" ? "/admin/add" : activeTab === "projects" ? "/admin/project-add" : activeTab === "plans" ? "/admin/plan-add" : "/admin/team-add"} 
+          <Link
+            href={activeTab === "properties" ? "/admin/add" : activeTab === "projects" ? "/admin/project-add" : activeTab === "plans" ? "/admin/plan-add" : "/admin/team-add"}
             className={cn("w-full md:w-auto text-white font-medium px-6 py-2.5 rounded-lg shadow-sm transition-colors text-center whitespace-nowrap block", activeTab === "properties" ? "bg-[#d95d29] hover:bg-[#b04a1f]" : activeTab === "projects" ? "bg-hi-blue hover:bg-[#347Ab7]" : activeTab === "plans" ? "bg-[#FFB800] text-black hover:bg-[#e0a800]" : "bg-[#2C2C2C] hover:bg-black")}
           >
             {activeTab === "properties" ? "+ Cadastrar Imóvel" : activeTab === "projects" ? "+ Novo Empreendimento" : activeTab === "plans" ? "+ Novo Projeto" : "+ Novo Colaborador"}
@@ -123,7 +123,7 @@ export default function AdminDashboard() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-            <tr className="border-b border-neutral-200 bg-neutral-50/50">
+              <tr className="border-b border-neutral-200 bg-neutral-50/50">
                 <th className="p-4 text-sm font-medium text-neutral-500">
                   {activeTab === "team" ? "Colaborador" : activeTab === "plans" ? "Projeto" : activeTab === "properties" ? "Imóvel" : "Empreendimento"}
                 </th>
@@ -161,12 +161,12 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-4">
                         <div className="w-16 h-16 rounded-xl bg-neutral-100 overflow-hidden shrink-0 border border-neutral-200">
                           {(item.main_image_url || item.image_url) ? (
-                            <NextImage 
-                              src={activeTab === "team" ? item.image_url : item.main_image_url!} 
-                              alt={activeTab === "team" ? item.name : item.title} 
-                              width={64} 
-                              height={64} 
-                              className="w-full h-full object-cover" 
+                            <NextImage
+                              src={activeTab === "team" ? item.image_url : item.main_image_url!}
+                              alt={activeTab === "team" ? item.name : item.title}
+                              width={64}
+                              height={64}
+                              className="w-full h-full object-cover"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-neutral-400">
@@ -185,7 +185,7 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                     </td>
-                    
+
                     {activeTab === "properties" ? (
                       <td className="p-4">
                         <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset", (item as Property).type === 'Sale' ? "bg-blue-500/10 text-blue-400 ring-blue-500/20" : "bg-purple-500/10 text-purple-400 ring-purple-500/20")}>
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                       {activeTab === "properties" ? (
                         <span className={cn(
                           "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset",
-                          item.status === 'Available' 
+                          item.status === 'Available'
                             ? "bg-emerald-50 text-emerald-600 ring-emerald-200"
                             : "bg-neutral-100 text-neutral-500 ring-neutral-200"
                         )}>
@@ -230,7 +230,7 @@ export default function AdminDashboard() {
                         <span className="text-xs text-emerald-500 uppercase tracking-widest">Ativo</span>
                       )}
                     </td>
-                    
+
                     <td className="p-4 text-right">
                       <div className="flex justify-end gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                         {activeTab !== "team" && activeTab !== "plans" && item.status === 'Available' && (
@@ -239,7 +239,7 @@ export default function AdminDashboard() {
                           </button>
                         )}
                         {activeTab !== "team" && (
-                          <Link 
+                          <Link
                             href={activeTab === "properties" ? `/admin/edit/${item.id}` : activeTab === "projects" ? `/admin/project-edit/${item.id}` : `/admin/plan-edit/${item.id}`}
                             title="Editar"
                             className="p-2 text-neutral-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"

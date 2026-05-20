@@ -56,11 +56,14 @@ export default async function EmpreendimentosPage({
       <Header />
 
       {/* Hero */}
-      <section
-        className="relative pt-40 pb-20 px-6 text-white overflow-hidden"
-        style={{ backgroundImage: "url('/fundo.png')", backgroundSize: "cover", backgroundPosition: "center" }}
-      >
-        <div className="absolute inset-0 bg-black/55" />
+      <section className="relative pt-40 pb-24 px-6 text-white overflow-hidden bg-[#191919]">
+        {/* Grid pattern background */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: "linear-gradient(rgba(255,184,0,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,184,0,0.4) 1px, transparent 1px)",
+          backgroundSize: "40px 40px"
+        }} />
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#F1F1F1] to-transparent z-0" />
+
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-bold mb-4">
             <Building2 size={16} />

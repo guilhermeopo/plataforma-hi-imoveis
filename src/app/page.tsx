@@ -1,11 +1,12 @@
-import { supabase, type Property, type Project } from "@/lib/supabase";
+import { supabase, type Property, type Project, type ArchitecturalPlan } from "@/lib/supabase";
 import { PropertyGrid } from "@/components/ui/PropertyGrid";
 import { ProjectGrid } from "@/components/ui/ProjectGrid";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { Header } from "@/components/ui/Header";
-import { PropertyCarousel } from "@/components/ui/PropertyCarousel";
+import { ArchPlanCard } from "@/components/ui/ArchPlanCard";
 import Image from "next/image";
+import Link from "next/link";
 
 export const revalidate = 0; // Disable static rendering to always show fresh data
 
@@ -22,10 +23,11 @@ export default async function Home({
   const maxPrice = searchParams.maxPrice ? Number(searchParams.maxPrice) : Infinity;
   const code = searchParams.code?.toLowerCase() || "";
 
-  const [{ data: properties }, { data: projects }, { data: systemOptions }] = await Promise.all([
+  const [{ data: properties }, { data: projects }, { data: systemOptions }, { data: plansData }] = await Promise.all([
     supabase.from("properties").select("*").order("created_at", { ascending: false }),
     supabase.from("projects").select("*").order("created_at", { ascending: false }),
-    supabase.from("system_options").select("*").order("value", { ascending: true })
+    supabase.from("system_options").select("*").order("value", { ascending: true }),
+    supabase.from("architectural_plans").select("*").order("created_at", { ascending: false }).limit(3)
   ]);
 
   const allLocationsRaw = [
@@ -38,7 +40,8 @@ export default async function Home({
   const allTypesRaw = [
     ...(systemOptions?.filter(o => o.type === "property_type").map(o => o.value) || []),
     ...(properties || []).map(p => p.property_type),
-    ...(projects || []).map(p => p.property_type)
+    ...(projects || []).map(p => p.property_type),
+    ...(plansData || []).map(p => p.style)
   ].filter(Boolean) as string[];
   const allTypes = Array.from(new Set(allTypesRaw)).sort();
 
@@ -166,11 +169,8 @@ export default async function Home({
 
   const salesProperties = filteredProperties.filter(p => p.type === 'Sale');
 
-  const carouselProperties = displayProperties.filter(p => p.is_featured).length > 0
-    ? displayProperties.filter(p => p.is_featured)
-    : displayProperties.slice(0, 8);
-
   return (
+
     <main className="min-h-screen">
       <Header />
 
@@ -224,14 +224,39 @@ export default async function Home({
           />
         )}
 
-        <div className="py-10">
-          <PropertyCarousel
-            properties={carouselProperties}
-            titleDark="Nossa"
-            titleRed="Seleção Especial"
-            subtitle="Confira as oportunidades que separamos para você."
-          />
-        </div>
+        {/* Projetos Prontos Preview */}
+        {plansData && plansData.length > 0 && (
+          <div className="py-10 px-6 md:px-12">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-end justify-between mb-8">
+                <div>
+                  <div className="inline-flex items-center gap-2 bg-[#FFB800]/10 text-[#b07d00] border border-[#FFB800]/20 px-3 py-1 rounded-full text-xs font-bold mb-3">
+                    🏗️ NOVIDADE
+                  </div>
+                  <h2 className="text-3xl font-black text-[#2C2C2C] tracking-tighter">
+                    Projetos <span className="text-[#FFB800]">Disponíveis</span>
+                  </h2>
+                  <p className="text-neutral-500 mt-1 text-sm">Plantas arquitetônicas prontas para construção.</p>
+                </div>
+                <Link href="/projetos-prontos" className="hidden md:flex items-center gap-2 text-sm font-bold text-neutral-600 hover:text-[#FFB800] transition-colors">
+                  Ver todos →
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {(plansData as ArchitecturalPlan[]).map(plan => (
+                  <ArchPlanCard key={plan.id} plan={plan} />
+                ))}
+              </div>
+
+              <div className="mt-8 text-center md:hidden">
+                <Link href="/projetos-prontos" className="inline-flex items-center gap-2 bg-[#FFB800] text-black font-bold px-6 py-3 rounded-xl hover:bg-[#e0a800] transition-colors">
+                  Ver todos os projetos →
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Projetos Prontos CTA */}

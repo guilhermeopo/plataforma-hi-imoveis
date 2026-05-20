@@ -25,6 +25,7 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [newMainImageFile, setNewMainImageFile] = useState<File | null>(null);
+  const [newMainPreview, setNewMainPreview] = useState<string | null>(null);
   const [newGalleryFiles, setNewGalleryFiles] = useState<File[]>([]);
   const [newFloorPlanFiles, setNewFloorPlanFiles] = useState<File[]>([]);
 
@@ -41,10 +42,19 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
     video_url: "",
     broker_name: "",
     broker_whatsapp: "",
+    captador_id: "",
     main_image_url: "",
     gallery_urls: [] as string[],
     floor_plan_urls: [] as string[],
   });
+
+  const [team, setTeam] = useState<any[]>([]);
+
+  useEffect(() => {
+    supabase.from("team_members").select("*").order("name").then(({ data }) => {
+      if (data) setTeam(data);
+    });
+  }, []);
 
   useEffect(() => {
     supabase.from("architectural_plans").select("*").eq("id", params.id).single().then(({ data, error }) => {
@@ -62,6 +72,7 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
         video_url: data.video_url || "",
         broker_name: data.broker_name || "",
         broker_whatsapp: data.broker_whatsapp || "",
+        captador_id: data.captador_id || "",
         main_image_url: data.main_image_url || "",
         gallery_urls: data.gallery_urls || [],
         floor_plan_urls: data.floor_plan_urls || [],
@@ -114,6 +125,7 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
         video_url: formData.video_url || null,
         broker_name: formData.broker_name || null,
         broker_whatsapp: formData.broker_whatsapp || null,
+        captador_id: formData.captador_id || null,
       }).eq("id", params.id);
 
       if (error) { alert("Erro ao atualizar: " + error.message); }
@@ -196,16 +208,30 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
           </div>
         </div>
 
-        {/* Corretor */}
         <div className="bg-white p-8 rounded-2xl border border-neutral-200 shadow-sm space-y-6">
-          <h2 className="text-xl font-semibold text-[#2C2C2C] border-b border-neutral-100 pb-4">Corretor Responsável</h2>
+          <h2 className="text-xl font-semibold text-[#2C2C2C] border-b border-neutral-100 pb-4">Responsividade e Captação</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className={labelClass}>Nome do Corretor</label>
+              <label className={labelClass}>Captador do Projeto (Equipe)</label>
+              <select 
+                className={inputClass + " cursor-pointer"}
+                value={formData.captador_id}
+                onChange={(e) => set("captador_id", e.target.value)}
+              >
+                <option value="">Selecione quem captou o projeto...</option>
+                {team.map(member => (
+                  <option key={member.id} value={member.id}>{member.name} ({member.role})</option>
+                ))}
+              </select>
+            </div>
+            <div className="hidden md:block"></div>
+
+            <div>
+              <label className={labelClass}>Nome do Corretor Oficial (Visual)</label>
               <input type="text" className={inputClass} value={formData.broker_name} onChange={e => set("broker_name", e.target.value)} />
             </div>
             <div>
-              <label className={labelClass}>WhatsApp</label>
+              <label className={labelClass}>WhatsApp do Corretor</label>
               <input type="tel" className={inputClass} placeholder="556899..." value={formData.broker_whatsapp} onChange={e => set("broker_whatsapp", e.target.value)} />
             </div>
           </div>
@@ -229,7 +255,19 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
           <div>
             <label className={labelClass}>Substituir Imagem de Capa</label>
             <input type="file" accept="image/*" className="w-full bg-white border border-neutral-300 rounded-xl p-3 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#FFB800] file:text-black hover:file:bg-[#e0a800] cursor-pointer"
-              onChange={e => { if (e.target.files?.[0]) setNewMainImageFile(e.target.files[0]); }} />
+              onChange={e => { 
+                if (e.target.files?.[0]) {
+                  const file = e.target.files[0];
+                  setNewMainImageFile(file);
+                  setNewMainPreview(URL.createObjectURL(file));
+                }
+              }} 
+            />
+            {newMainPreview && (
+              <div className="mt-3 relative w-32 h-20 rounded-lg overflow-hidden border border-neutral-200">
+                <img src={newMainPreview} alt="Nova capa preview" className="w-full h-full object-cover" />
+              </div>
+            )}
           </div>
 
           {/* Current gallery */}
@@ -250,7 +288,29 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
           <div>
             <label className={labelClass}>Adicionar Renders à Galeria</label>
             <input type="file" accept="image/*" multiple className="w-full bg-white border border-neutral-300 rounded-xl p-3 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-neutral-800 file:text-white hover:file:bg-neutral-700 cursor-pointer"
-              onChange={e => { if (e.target.files) setNewGalleryFiles(prev => [...prev, ...Array.from(e.target.files!)]); }} />
+              onChange={e => { 
+                if (e.target.files) {
+                  const newFiles = Array.from(e.target.files);
+                  setNewGalleryFiles(prev => [...prev, ...newFiles]);
+                }
+              }} 
+            />
+            {newGalleryFiles.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {newGalleryFiles.map((file, i) => (
+                  <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden border border-neutral-200 group">
+                    <img src={URL.createObjectURL(file)} alt="Preview" className="w-full h-full object-cover" />
+                    <button 
+                      type="button" 
+                      onClick={() => setNewGalleryFiles(prev => prev.filter((_, idx) => idx !== i))}
+                      className="absolute top-1 right-1 bg-red-500 text-white p-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <span className="text-[10px] px-1">×</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
             <p className="text-xs text-neutral-500 mt-1">{newGalleryFiles.length} novo(s) render(s) selecionado(s).</p>
           </div>
 
@@ -272,7 +332,29 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
           <div>
             <label className={labelClass}>📐 Adicionar Plantas Baixas</label>
             <input type="file" accept="image/*" multiple className="w-full bg-white border border-neutral-300 rounded-xl p-3 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-700 cursor-pointer"
-              onChange={e => { if (e.target.files) setNewFloorPlanFiles(prev => [...prev, ...Array.from(e.target.files!)]); }} />
+              onChange={e => { 
+                if (e.target.files) {
+                  const newFiles = Array.from(e.target.files);
+                  setNewFloorPlanFiles(prev => [...prev, ...newFiles]);
+                }
+              }} 
+            />
+            {newFloorPlanFiles.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {newFloorPlanFiles.map((file, i) => (
+                  <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-neutral-200 group bg-neutral-50">
+                    <img src={URL.createObjectURL(file)} alt="Preview" className="w-full h-full object-contain" />
+                    <button 
+                      type="button" 
+                      onClick={() => setNewFloorPlanFiles(prev => prev.filter((_, idx) => idx !== i))}
+                      className="absolute top-1 right-1 bg-red-500 text-white p-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <span className="text-[10px] px-1">×</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
             <p className="text-xs text-neutral-500 mt-1">{newFloorPlanFiles.length} nova(s) planta(s) selecionada(s).</p>
           </div>
 

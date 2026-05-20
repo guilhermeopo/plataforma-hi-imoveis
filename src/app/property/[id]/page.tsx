@@ -15,6 +15,16 @@ export default async function PropertyDetails({ params }: { params: { id: string
     .eq("id", params.id)
     .single();
 
+  let captador = null;
+  if (property?.captador_id) {
+    const { data: captadorData } = await supabase
+      .from("team_members")
+      .select("*")
+      .eq("id", property.captador_id)
+      .single();
+    captador = captadorData;
+  }
+
   const isMock = !property && process.env.NODE_ENV === "development";
   const displayProperty: Property | null = property || (isMock ? {
     id: "1",
@@ -252,6 +262,27 @@ export default async function PropertyDetails({ params }: { params: { id: string
               * A marcação no mapa é centrada na região/endereço informado pelo corretor.
             </p>
           </div>
+
+          {/* Captador Section - Premium Minimalist */}
+          {captador && (
+            <div className="mt-16 pt-12 border-t border-neutral-100">
+              <div className="max-w-md mx-auto bg-white/50 backdrop-blur-sm rounded-3xl p-6 border border-neutral-200/60 shadow-sm flex items-center gap-6 group hover:border-[#2C2C2C]/20 transition-all duration-500">
+                <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-md flex-shrink-0">
+                  <img 
+                    src={captador.image_url} 
+                    alt={captador.name} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-10 transition-opacity" />
+                </div>
+                <div>
+                  <span className="inline-block px-2 py-0.5 rounded-full bg-neutral-100 text-[10px] font-bold text-neutral-500 uppercase tracking-widest mb-2 group-hover:bg-hi-blue/10 group-hover:text-hi-blue transition-colors">Captação Especializada</span>
+                  <h3 className="text-lg font-black text-[#2C2C2C] leading-none">{captador.name}</h3>
+                </div>
+              </div>
+              <p className="text-[10px] text-neutral-400 text-center mt-6 uppercase tracking-[0.3em] font-medium opacity-50">Curadoria HI Imóveis</p>
+            </div>
+          )}
         </div>
       )}
 

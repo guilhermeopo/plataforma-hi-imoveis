@@ -15,6 +15,7 @@ CREATE TABLE public.properties (
   video_url text,
   broker_name text,
   broker_whatsapp text,
+  captador_id uuid REFERENCES public.team_members(id) ON DELETE SET NULL,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -56,6 +57,7 @@ CREATE TABLE public.projects (
   video_url text,
   broker_name text,
   broker_whatsapp text,
+  captador_id uuid REFERENCES public.team_members(id) ON DELETE SET NULL,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -136,6 +138,7 @@ CREATE TABLE public.architectural_plans (
   video_url text,
   broker_name text,
   broker_whatsapp text,
+  captador_id uuid REFERENCES public.team_members(id) ON DELETE SET NULL,
   created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
