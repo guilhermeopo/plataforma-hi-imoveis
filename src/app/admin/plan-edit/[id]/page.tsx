@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase, TeamMember } from "@/lib/supabase";
 import { ArrowLeft, Save, Ruler, Image as ImageIcon, DollarSign } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const STYLES = ["Moderno", "Clássico", "Rústico", "Contemporâneo", "Minimalista"];
 
@@ -48,7 +49,7 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
     floor_plan_urls: [] as string[],
   });
 
-  const [team, setTeam] = useState<any[]>([]);
+  const [team, setTeam] = useState<TeamMember[]>([]);
 
   useEffect(() => {
     supabase.from("team_members").select("*").order("name").then(({ data }) => {
@@ -265,7 +266,7 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
             />
             {newMainPreview && (
               <div className="mt-3 relative w-32 h-20 rounded-lg overflow-hidden border border-neutral-200">
-                <img src={newMainPreview} alt="Nova capa preview" className="w-full h-full object-cover" />
+                <Image src={newMainPreview} alt="Nova capa preview" fill unoptimized className="object-cover" />
               </div>
             )}
           </div>
@@ -299,7 +300,7 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
               <div className="flex flex-wrap gap-2 mt-3">
                 {newGalleryFiles.map((file, i) => (
                   <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden border border-neutral-200 group">
-                    <img src={URL.createObjectURL(file)} alt="Preview" className="w-full h-full object-cover" />
+                    <Image src={URL.createObjectURL(file)} alt="Preview" fill unoptimized className="object-cover" />
                     <button 
                       type="button" 
                       onClick={() => setNewGalleryFiles(prev => prev.filter((_, idx) => idx !== i))}
@@ -343,7 +344,7 @@ export default function EditPlanPage({ params }: { params: { id: string } }) {
               <div className="flex flex-wrap gap-2 mt-3">
                 {newFloorPlanFiles.map((file, i) => (
                   <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-neutral-200 group bg-neutral-50">
-                    <img src={URL.createObjectURL(file)} alt="Preview" className="w-full h-full object-contain" />
+                    <Image src={URL.createObjectURL(file)} alt="Preview" fill unoptimized className="object-contain" />
                     <button 
                       type="button" 
                       onClick={() => setNewFloorPlanFiles(prev => prev.filter((_, idx) => idx !== i))}

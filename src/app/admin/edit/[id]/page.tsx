@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase, TeamMember } from "@/lib/supabase";
 import { ArrowLeft, Save, Building, Image as ImageIcon, DollarSign, MapPin } from "lucide-react";
 import Link from "next/link";
 
@@ -36,7 +36,7 @@ export default function EditPropertyPage() {
   const [existingMainImage, setExistingMainImage] = useState("");
   const [existingGallery, setExistingGallery] = useState<string[]>([]);
 
-  const [options, setOptions] = useState<{ neighborhoods: string[], propertyTypes: string[], team: any[] }>({ neighborhoods: [], propertyTypes: [], team: [] });
+  const [options, setOptions] = useState<{ neighborhoods: string[], propertyTypes: string[], team: TeamMember[] }>({ neighborhoods: [], propertyTypes: [], team: [] });
 
   useEffect(() => {
     Promise.all([

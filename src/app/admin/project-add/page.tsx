@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase, TeamMember } from "@/lib/supabase";
 import { ArrowLeft, Save, Building, Image as ImageIcon, DollarSign, MapPin, List } from "lucide-react";
 import Link from "next/link";
 
@@ -28,7 +28,7 @@ export default function AddProjectPage() {
     captador_id: "",
   });
 
-  const [options, setOptions] = useState<{ neighborhoods: string[], propertyTypes: string[], team: any[] }>({ neighborhoods: [], propertyTypes: [], team: [] });
+  const [options, setOptions] = useState<{ neighborhoods: string[], propertyTypes: string[], team: TeamMember[] }>({ neighborhoods: [], propertyTypes: [], team: [] });
 
   useEffect(() => {
     Promise.all([
