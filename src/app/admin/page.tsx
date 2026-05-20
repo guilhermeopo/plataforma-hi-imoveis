@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase, type Property, type Project, type TeamMember } from "@/lib/supabase";
-import { Trash2, CheckCircle, Image as ImageIcon, Pencil, Building2, Home, Users } from "lucide-react";
+import { supabase, type Property, type Project, type TeamMember, type ArchitecturalPlan } from "@/lib/supabase";
+import { Trash2, CheckCircle, Image as ImageIcon, Pencil, Building2, Home, Users, Ruler } from "lucide-react";
 import Link from "next/link";
 import NextImage from "next/image";
 import { cn } from "@/lib/utils";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<"properties" | "projects" | "team">("properties");
+  const [activeTab, setActiveTab] = useState<"properties" | "projects" | "plans" | "team">("properties");
   const [properties, setProperties] = useState<Property[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [plans, setPlans] = useState<ArchitecturalPlan[]>([]);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,6 +28,11 @@ export default function AdminDashboard() {
     (p.location && p.location.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const filteredPlans = plans.filter(p =>
+    p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.style.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const filteredTeam = teamMembers.filter(p => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     p.role.toLowerCase().includes(searchQuery.toLowerCase())
@@ -38,31 +44,29 @@ export default function AdminDashboard() {
 
   async function fetchData() {
     setLoading(true);
-    const [pRes, prjRes, teamRes] = await Promise.all([
+    const [pRes, prjRes, plnsRes, teamRes] = await Promise.all([
       supabase.from("properties").select("*").order("created_at", { ascending: false }),
       supabase.from("projects").select("*").order("created_at", { ascending: false }),
+      supabase.from("architectural_plans").select("*").order("created_at", { ascending: false }),
       supabase.from("team_members").select("*").order("created_at", { ascending: false })
     ]);
     
     if (pRes.data) setProperties(pRes.data as Property[]);
     if (prjRes.data) setProjects(prjRes.data as Project[]);
+    if (plnsRes.data) setPlans(plnsRes.data as ArchitecturalPlan[]);
     if (teamRes.data) setTeamMembers(teamRes.data as TeamMember[]);
     setLoading(false);
   }
 
-  async function deleteItem(id: string, type: "properties" | "projects" | "team") {
-    if (!window.confirm(`Tem certeza que deseja excluir ${type === 'properties' ? 'este imóvel' : type === 'projects' ? 'este empreendimento' : 'este colaborador'}?`)) return;
-    
-    if (type === "properties") {
-      setProperties((prev) => prev.filter((p) => p.id !== id));
-      await supabase.from("properties").delete().eq("id", id);
-    } else if (type === "projects") {
-      setProjects((prev) => prev.filter((p) => p.id !== id));
-      await supabase.from("projects").delete().eq("id", id);
-    } else {
-      setTeamMembers((prev) => prev.filter((p) => p.id !== id));
-      await supabase.from("team_members").delete().eq("id", id);
-    }
+  async function deleteItem(id: string, type: "properties" | "projects" | "plans" | "team") {
+    const label = type === 'properties' ? 'este imóvel' : type === 'projects' ? 'este empreendimento' : type === 'plans' ? 'este projeto' : 'este colaborador';
+    if (!window.confirm(`Tem certeza que deseja excluir ${label}?`)) return;
+    const table = type === 'plans' ? 'architectural_plans' : type === 'team' ? 'team_members' : type;
+    if (type === "properties") setProperties(prev => prev.filter(p => p.id !== id));
+    else if (type === "projects") setProjects(prev => prev.filter(p => p.id !== id));
+    else if (type === "plans") setPlans(prev => prev.filter(p => p.id !== id));
+    else setTeamMembers(prev => prev.filter(p => p.id !== id));
+    await supabase.from(table).delete().eq("id", id);
   }
 
   async function markAsSold(id: string) {
@@ -92,31 +96,25 @@ export default function AdminDashboard() {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-8 border-b border-neutral-200 pb-4">
-        <button 
-          onClick={() => setActiveTab("properties")} 
-          className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "properties" ? "bg-neutral-800 text-white shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}
-        >
+        <button onClick={() => setActiveTab("properties")} className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "properties" ? "bg-neutral-800 text-white shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}>
           <Home size={18} /> Imóveis Padrão
         </button>
-        <button 
-          onClick={() => setActiveTab("projects")} 
-          className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "projects" ? "bg-hi-blue text-white shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}
-        >
+        <button onClick={() => setActiveTab("projects")} className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "projects" ? "bg-hi-blue text-white shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}>
           <Building2 size={18} /> Empreendimentos
         </button>
-        <button 
-          onClick={() => setActiveTab("team")} 
-          className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "team" ? "bg-[#2C2C2C] text-white shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}
-        >
+        <button onClick={() => setActiveTab("plans")} className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "plans" ? "bg-[#FFB800] text-black shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}>
+          <Ruler size={18} /> Projetos Prontos
+        </button>
+        <button onClick={() => setActiveTab("team")} className={cn("px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-colors", activeTab === "team" ? "bg-[#2C2C2C] text-white shadow-md" : "bg-white text-neutral-600 hover:bg-neutral-100 border border-neutral-200")}>
           <Users size={18} /> Equipe
         </button>
 
         <div className="ml-auto w-full md:w-auto mt-4 md:mt-0">
           <Link 
-            href={activeTab === "properties" ? "/admin/add" : activeTab === "projects" ? "/admin/project-add" : "/admin/team-add"} 
-            className={cn("w-full md:w-auto text-white font-medium px-6 py-2.5 rounded-lg shadow-sm transition-colors text-center whitespace-nowrap block", activeTab === "properties" ? "bg-[#d95d29] hover:bg-[#b04a1f]" : activeTab === "projects" ? "bg-hi-blue hover:bg-[#347Ab7]" : "bg-[#2C2C2C] hover:bg-black")}
+            href={activeTab === "properties" ? "/admin/add" : activeTab === "projects" ? "/admin/project-add" : activeTab === "plans" ? "/admin/plan-add" : "/admin/team-add"} 
+            className={cn("w-full md:w-auto text-white font-medium px-6 py-2.5 rounded-lg shadow-sm transition-colors text-center whitespace-nowrap block", activeTab === "properties" ? "bg-[#d95d29] hover:bg-[#b04a1f]" : activeTab === "projects" ? "bg-hi-blue hover:bg-[#347Ab7]" : activeTab === "plans" ? "bg-[#FFB800] text-black hover:bg-[#e0a800]" : "bg-[#2C2C2C] hover:bg-black")}
           >
-            {activeTab === "properties" ? "+ Cadastrar Imóvel" : activeTab === "projects" ? "+ Novo Empreendimento" : "+ Novo Colaborador"}
+            {activeTab === "properties" ? "+ Cadastrar Imóvel" : activeTab === "projects" ? "+ Novo Empreendimento" : activeTab === "plans" ? "+ Novo Projeto" : "+ Novo Colaborador"}
           </Link>
         </div>
       </div>
@@ -125,10 +123,16 @@ export default function AdminDashboard() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-neutral-200 bg-neutral-50/50">
-                <th className="p-4 text-sm font-medium text-neutral-500">{activeTab === "properties" ? "Imóvel" : activeTab === "projects" ? "Empreendimento" : "Colaborador"}</th>
-                <th className="p-4 text-sm font-medium text-neutral-500">{activeTab === "properties" ? "Tipo" : activeTab === "projects" ? "Status de Obra" : "Cargo"}</th>
-                <th className="p-4 text-sm font-medium text-neutral-500">{activeTab === "properties" ? "Preço" : activeTab === "projects" ? "A partir de" : "-"}</th>
+            <tr className="border-b border-neutral-200 bg-neutral-50/50">
+                <th className="p-4 text-sm font-medium text-neutral-500">
+                  {activeTab === "team" ? "Colaborador" : activeTab === "plans" ? "Projeto" : activeTab === "properties" ? "Imóvel" : "Empreendimento"}
+                </th>
+                <th className="p-4 text-sm font-medium text-neutral-500">
+                  {activeTab === "properties" ? "Tipo" : activeTab === "projects" ? "Status de Obra" : activeTab === "plans" ? "Estilo" : "Cargo"}
+                </th>
+                <th className="p-4 text-sm font-medium text-neutral-500">
+                  {activeTab === "plans" ? "Metragem" : activeTab !== "team" ? "Preço" : "-"}
+                </th>
                 <th className="p-4 text-sm font-medium text-neutral-500">Status</th>
                 <th className="p-4 text-sm font-medium text-neutral-500 text-right">Ações</th>
               </tr>
@@ -142,7 +146,7 @@ export default function AdminDashboard() {
                     </div>
                   </td>
                 </tr>
-              ) : (activeTab === "properties" ? filteredProperties : activeTab === "projects" ? filteredProjects : filteredTeam).length === 0 ? (
+              ) : (activeTab === "properties" ? filteredProperties : activeTab === "projects" ? filteredProjects : activeTab === "plans" ? filteredPlans : filteredTeam).length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-16 text-center text-neutral-500">
                     <ImageIcon className="mx-auto h-12 w-12 text-neutral-300 mb-4" />
@@ -151,7 +155,7 @@ export default function AdminDashboard() {
                 </tr>
               ) : (
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (activeTab === "properties" ? filteredProperties : activeTab === "projects" ? filteredProjects : filteredTeam).map((item: any) => (
+                (activeTab === "properties" ? filteredProperties : activeTab === "projects" ? filteredProjects : activeTab === "plans" ? filteredPlans : filteredTeam).map((item: any) => (
                   <tr key={item.id} className="hover:bg-neutral-50 transition-colors group">
                     <td className="p-4">
                       <div className="flex items-center gap-4">
@@ -184,33 +188,30 @@ export default function AdminDashboard() {
                     
                     {activeTab === "properties" ? (
                       <td className="p-4">
-                        <span className={cn(
-                          "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset",
-                          (item as Property).type === 'Sale' 
-                            ? "bg-blue-500/10 text-blue-400 ring-blue-500/20"
-                            : "bg-purple-500/10 text-purple-400 ring-purple-500/20"
-                        )}>
+                        <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset", (item as Property).type === 'Sale' ? "bg-blue-500/10 text-blue-400 ring-blue-500/20" : "bg-purple-500/10 text-purple-400 ring-purple-500/20")}>
                           {(item as Property).type === 'Sale' ? 'Venda' : 'Aluguel'}
                         </span>
                       </td>
                     ) : activeTab === "projects" ? (
                       <td className="p-4">
-                        <span className={cn(
-                          "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset",
-                          (item as Project).status === 'Launch' ? "bg-hi-orange/10 text-hi-dark-orange ring-hi-orange/20" :
-                          (item as Project).status === 'InProgress' ? "bg-hi-blue/10 text-hi-blue ring-hi-blue/20" :
-                          "bg-emerald-50 text-emerald-600 ring-emerald-200"
-                        )}>
+                        <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset", (item as Project).status === 'Launch' ? "bg-hi-orange/10 text-hi-dark-orange ring-hi-orange/20" : (item as Project).status === 'InProgress' ? "bg-hi-blue/10 text-hi-blue ring-hi-blue/20" : "bg-emerald-50 text-emerald-600 ring-emerald-200")}>
                           {(item as Project).status === 'Launch' ? 'Lançamento' : (item as Project).status === 'InProgress' ? 'Em Obras' : 'Pronto'}
                         </span>
-                        {(item as Project).stage && <p className="text-xs text-neutral-500 mt-1">{(item as Project).stage}</p>}
+                      </td>
+                    ) : activeTab === "plans" ? (
+                      <td className="p-4">
+                        <span className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-bold bg-[#FFB800]/10 text-[#b07d00] ring-1 ring-[#FFB800]/30">{item.style}</span>
                       </td>
                     ) : (
                       <td className="p-4"><span className="text-sm font-medium">{item.role}</span></td>
                     )}
-                   
+
                     <td className="p-4 font-bold text-hi-blue">
-                      {activeTab !== "team" ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((item as Property).price ?? (item as Project).price_starts_at) : '-'}
+                      {activeTab === "plans" ? (
+                        <span className="text-neutral-700">{item.area_m2} m² · {item.bedrooms} qts</span>
+                      ) : activeTab !== "team" ? (
+                        new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format((item as Property).price ?? (item as Project).price_starts_at)
+                      ) : '-'}
                     </td>
 
                     <td className="p-4">
@@ -232,29 +233,21 @@ export default function AdminDashboard() {
                     
                     <td className="p-4 text-right">
                       <div className="flex justify-end gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                        {activeTab === "properties" && item.status === 'Available' && (
-                          <button 
-                            onClick={() => markAsSold(item.id)}
-                            title="Marcar como Vendido"
-                            className="p-2 text-neutral-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors"
-                          >
+                        {activeTab !== "team" && activeTab !== "plans" && item.status === 'Available' && (
+                          <button onClick={() => markAsSold(item.id)} title="Marcar como Vendido" className="p-2 text-neutral-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors">
                             <CheckCircle size={20} />
                           </button>
                         )}
                         {activeTab !== "team" && (
                           <Link 
-                            href={activeTab === "properties" ? `/admin/edit/${item.id}` : `/admin/project-edit/${item.id}`}
+                            href={activeTab === "properties" ? `/admin/edit/${item.id}` : activeTab === "projects" ? `/admin/project-edit/${item.id}` : `/admin/plan-edit/${item.id}`}
                             title="Editar"
                             className="p-2 text-neutral-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
                           >
                             <Pencil size={20} />
                           </Link>
                         )}
-                        <button 
-                          onClick={() => deleteItem(item.id, activeTab)}
-                          title="Excluir"
-                          className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                        >
+                        <button onClick={() => deleteItem(item.id, activeTab)} title="Excluir" className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
                           <Trash2 size={20} />
                         </button>
                       </div>

@@ -82,10 +82,17 @@ export type ArchitecturalPlan = {
   area_m2: number;
   bedrooms: number;
   suites: number;
+  bathrooms?: number;
+  garage?: number;
   style: string;
   price: number;
   main_image_url: string;
   gallery_urls: string[] | null;
+  floor_plan_urls?: string[] | null;
+  video_url?: string | null;
+  broker_name?: string | null;
+  broker_whatsapp?: string | null;
   created_at: string;
 };
+
 

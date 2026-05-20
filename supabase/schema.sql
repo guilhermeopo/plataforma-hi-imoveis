@@ -115,3 +115,47 @@ CREATE POLICY "Enable update team members for all users"
 CREATE POLICY "Enable delete team members for all users"
   ON public.team_members FOR DELETE
   USING ( true );
+
+-- ================================================
+-- Architectural Plans (Projetos Prontos) Table
+-- ================================================
+CREATE TABLE public.architectural_plans (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  title text NOT NULL,
+  description text NOT NULL,
+  area_m2 int NOT NULL DEFAULT 0,
+  bedrooms int NOT NULL DEFAULT 3,
+  suites int NOT NULL DEFAULT 1,
+  bathrooms int NOT NULL DEFAULT 1,
+  garage int NOT NULL DEFAULT 2,
+  style text NOT NULL DEFAULT 'Moderno',
+  price numeric NOT NULL DEFAULT 0,
+  main_image_url text NOT NULL,
+  gallery_urls text[] DEFAULT '{}',
+  floor_plan_urls text[] DEFAULT '{}',
+  video_url text,
+  broker_name text,
+  broker_whatsapp text,
+  created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Row Level Security
+ALTER TABLE public.architectural_plans ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Plans are viewable by everyone."
+  ON public.architectural_plans FOR SELECT
+  USING ( true );
+
+CREATE POLICY "Enable insert for plans"
+  ON public.architectural_plans FOR INSERT
+  WITH CHECK ( true );
+
+CREATE POLICY "Enable update for plans"
+  ON public.architectural_plans FOR UPDATE
+  USING ( true )
+  WITH CHECK ( true );
+
+CREATE POLICY "Enable delete for plans"
+  ON public.architectural_plans FOR DELETE
+  USING ( true );
+
