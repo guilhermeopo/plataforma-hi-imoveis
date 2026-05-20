@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { BedDouble, AreaChart, Star, ArrowRight } from "lucide-react";
 import { type ArchitecturalPlan } from "@/lib/supabase";
@@ -14,7 +15,8 @@ export function ArchPlanCard({ plan }: { plan: ArchitecturalPlan }) {
   const styleClass = styleColors[plan.style] || "bg-neutral-100 text-neutral-600 border-neutral-200";
 
   return (
-    <div className="group relative flex flex-col bg-white rounded-2xl overflow-hidden border border-neutral-200 hover:border-[#FFB800]/50 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-[#FFB800]/10">
+    <Link href={`/projetos-prontos/${plan.id}`} className="group relative flex flex-col bg-white rounded-2xl overflow-hidden border border-neutral-200 hover:border-[#FFB800]/50 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-[#FFB800]/10">
+
       {/* Image */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-100">
         <Image
@@ -74,6 +76,6 @@ export function ArchPlanCard({ plan }: { plan: ArchitecturalPlan }) {
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
