@@ -19,10 +19,15 @@ export default async function SobrePage() {
       <div className="h-20 md:h-[90px] bg-white shadow-sm flex-shrink-0 w-full" />
 
       {/* Hero Section */}
-      <section className="bg-[#f4a100] text-white py-24 px-6 mt-1 shadow-lg relative overflow-hidden">
-        <div className="absolute inset-0 bg-[#d3a300]/10 skew-y-3 origin-bottom-left" />
+      <section className="relative pt-40 pb-24 px-6 text-white overflow-hidden bg-[#191919]">
+        {/* Grid pattern background */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: "linear-gradient(rgba(255,184,0,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,184,0,0.4) 1px, transparent 1px)",
+          backgroundSize: "40px 40px"
+        }} />
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#F1F1F1] to-transparent z-0" />
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 tracking-tight">Sobre a HI Imóveis</h1>
+          <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 tracking-tight">Sobre a <br />HI Imóveis e Construções</h1>
           <p className="text-lg md:text-2xl text-white/80 leading-relaxed font-light">
             Construindo mais do que imóveis.<br className="hidden md:block" /> Construindo decisões certas.
           </p>
@@ -49,10 +54,12 @@ export default async function SobrePage() {
           <div className="aspect-square bg-neutral-200 rounded-3xl overflow-hidden shadow-2xl relative group">
             <div className="absolute inset-0 bg-[#2C2C2C]/10 group-hover:bg-transparent transition-colors duration-500 z-10" />
             <Image
-              src="https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1400&auto=format&fit=crop"
-              width={800} height={800}
-              className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700"
-              alt="HI Imóveis Escritório"
+              src="/fachadanova.png"
+              width={1200} height={1200}
+              className="object-cover w-[160%] h-[160%] max-w-none transform group-hover:scale-105 transition-transform duration-700"
+              style={{ objectPosition: '10% 40%' }}
+              alt="HI Imóveis Fachada"
+              unoptimized
             />
           </div>
         </div>
@@ -84,7 +91,7 @@ export default async function SobrePage() {
               <p className="text-neutral-500 font-light leading-relaxed">Tiramos o projeto do papel com especialistas em arquitetura e engenharia, sempre focados na excelência.</p>
             </div>
             <div className="bg-white p-10 rounded-2xl shadow-sm border border-neutral-200 hover:shadow-xl transition-shadow duration-300">
-              <div className="w-14 h-14 bg-[#f4a100] text-[#2C2C2C] rounded-xl flex items-center justify-center mb-6">
+              <div className="w-14 h-14 bg-[#f4a100] text-white rounded-xl flex items-center justify-center mb-6">
                 <CheckCircle2 size={28} />
               </div>
               <h3 className="text-xl font-bold text-[#2C2C2C] mb-3">Entrega Garantida</h3>

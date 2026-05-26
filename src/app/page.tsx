@@ -285,11 +285,7 @@ export default async function Home({
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 w-full max-w-sm mx-auto md:mx-0">
-            {["Moderno", "Clássico", "Rústico", "Contemporâneo"].map((style, i) => (
-              <a key={style} href={`/projetos-prontos?style=${style}`} className={`bg-white/5 border border-white/10 rounded-xl p-4 text-center hover:bg-[#FFB800]/10 hover:border-[#FFB800]/30 transition-all group ${i === 0 ? "col-span-2 md:col-span-1" : ""}`}>
-                <p className="text-white font-bold text-sm group-hover:text-[#FFB800] transition-colors">{style}</p>
-              </a>
-            ))}
+
           </div>
         </div>
       </section>
@@ -299,15 +295,15 @@ export default async function Home({
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left">
           <div className="flex flex-col items-center md:items-start">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-48 h-20 flex items-center justify-center overflow-visible">
-                <Image src="/logobranca.png" alt="HI Imóveis Logo" width={192} height={80} className="w-full h-full object-contain object-left scale-[2.5] origin-left" />
+              <div className="w-80 h-28 flex items-center justify-center overflow-visible">
+                <Image src="/logobranca.png" alt="HI Imóveis Logo" width={320} height={112} className="w-full h-full object-contain object-left scale-[3.5] origin-left" />
               </div>
               <div className="text-2xl font-bold tracking-tighter text-[#2C2C2C]">
                 <span className="text-hi-dark-orange ml-1.5"></span>
               </div>
             </div>
             <p className="text-neutral-600"></p>
-            <p className="text-white mt-4 text-xl md:text-2xl font-bold tracking-wide">CRECI J 074</p>
+            <p className="text-white mt-4 text-xl md:text-2xl font-bold tracking-wide">  CRECI J 074</p>
           </div>
 
           <div className="flex flex-col items-center md:items-start text-black">
