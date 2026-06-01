@@ -163,8 +163,8 @@ export default function EditPropertyPage() {
         main_image_url: finalImageUrl,
         gallery_urls: finalGalleryUrls,
         video_url: formData.video_url || null,
-        broker_name: formData.broker_name || null,
-        broker_whatsapp: formData.broker_whatsapp || null,
+        broker_name: "HI Imóveis e Construções",
+        broker_whatsapp: "5568999299010",
         captador_id: formData.captador_id || null,
         is_featured: formData.is_featured,
       }).eq("id", id);
@@ -181,7 +181,7 @@ export default function EditPropertyPage() {
       }
     } catch (error) {
       console.error(error);
-      alert("Erro crítico ao salvar.");
+      alert(error instanceof Error ? error.message : "Erro crítico ao salvar.");
     } finally {
       setLoading(false);
     }
@@ -370,9 +370,8 @@ export default function EditPropertyPage() {
 
         <div className="bg-white p-8 rounded-2xl border border-neutral-200 space-y-6 shadow-sm">
           <div className="flex items-center gap-3 border-b border-neutral-100 pb-4 mb-6">
-            <h2 className="text-xl font-semibold text-[#2C2C2C]">Responsividade e Captação</h2>
+            <h2 className="text-xl font-semibold text-[#2C2C2C]">Responsividade e Curadoria</h2>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-neutral-700 mb-2">Captador do Imóvel (Equipe)</label>
@@ -387,28 +386,6 @@ export default function EditPropertyPage() {
                 ))}
               </select>
               <p className="text-xs text-neutral-500 mt-2">O captador aparecerá com foto na página do imóvel.</p>
-            </div>
-            <div className="hidden md:block"></div>
-
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">Nome do Corretor de Venda (Visual)</label>
-              <input 
-                type="text" 
-                className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 placeholder-neutral-400 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                placeholder="Ex: Ana Silva ou Rogério Prado"
-                value={formData.broker_name}
-                onChange={(e) => setFormData({...formData, broker_name: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">WhatsApp do Corretor</label>
-              <input 
-                type="tel" 
-                className="w-full bg-white border border-neutral-300 shadow-sm rounded-xl p-3.5 text-neutral-800 placeholder-neutral-400 font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                placeholder="Ex: 5511999999999"
-                value={formData.broker_whatsapp}
-                onChange={(e) => setFormData({...formData, broker_whatsapp: e.target.value})}
-              />
             </div>
           </div>
         </div>

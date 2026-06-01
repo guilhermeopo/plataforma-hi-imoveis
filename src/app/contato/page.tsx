@@ -11,8 +11,13 @@ export default function ContatoPage() {
       <div className="h-20 md:h-[90px] bg-white shadow-sm flex-shrink-0 w-full" />
 
       {/* Hero Contato */}
-      <section className="bg-[#f4a100] text-white py-16 md:py-24 px-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[#FFB800]/10 skew-y-2 origin-bottom-right" />
+      <section className="relative pt-40 pb-24 px-6 text-white overflow-hidden bg-[#191919]">
+        {/* Grid pattern background */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: "linear-gradient(rgba(255,184,0,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,184,0,0.4) 1px, transparent 1px)",
+          backgroundSize: "40px 40px"
+        }} />
+        <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#F1F1F1] to-transparent z-0" />
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 tracking-tight">Entre em Contato</h1>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">

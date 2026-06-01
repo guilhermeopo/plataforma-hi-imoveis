@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Header } from "@/components/ui/Header";
-import { ArrowRight, ArrowLeft, Home, Map, Hammer, Sofa, Waves, Trees, Building2, Shield, Sparkles, Zap, Leaf, Gem } from "lucide-react";
+import { ArrowRight, ArrowLeft, Home, Map, Hammer, Sofa, Waves, Trees, Building2, Shield, Sparkles, Zap, BedDouble, Gem } from "lucide-react";
 import Image from "next/image";
 
 type StepData = {
@@ -188,7 +188,7 @@ export default function ConstruirPage() {
                     { label: 'Jardim Amplo', icon: <Trees size={24} /> },
                     { label: 'Escritório / Home Office', icon: <Home size={24} /> },
                     { label: 'Energia Solar', icon: <Zap size={24} /> },
-                    { label: 'Captação de Água', icon: <Leaf size={24} /> },
+                    { label: 'Closet/Suíte Master', icon: <BedDouble size={24} /> },
                   ].map(Item => (
                     <button
                       key={Item.label}

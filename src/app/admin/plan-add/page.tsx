@@ -92,8 +92,8 @@ export default function AddPlanPage() {
         gallery_urls: galleryUrls,
         floor_plan_urls: floorPlanUrls,
         video_url: formData.video_url || null,
-        broker_name: formData.broker_name || null,
-        broker_whatsapp: formData.broker_whatsapp || null,
+        broker_name: "HI Imóveis e Construções",
+        broker_whatsapp: "5568999299010",
         captador_id: formData.captador_id || null,
       }]);
 
@@ -185,7 +185,7 @@ export default function AddPlanPage() {
         </div>
 
         <div className="bg-white p-8 rounded-2xl border border-neutral-200 shadow-sm space-y-6">
-          <h2 className="text-xl font-semibold text-[#2C2C2C] border-b border-neutral-100 pb-4">Responsividade e Captação</h2>
+          <h2 className="text-xl font-semibold text-[#2C2C2C] border-b border-neutral-100 pb-4">Responsividade e Curadoria</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className={labelClass}>Captador do Projeto (Equipe)</label>
@@ -199,16 +199,6 @@ export default function AddPlanPage() {
                   <option key={member.id} value={member.id}>{member.name} ({member.role})</option>
                 ))}
               </select>
-            </div>
-            <div className="hidden md:block"></div>
-
-            <div>
-              <label className={labelClass}>Nome do Corretor Oficial (Visual)</label>
-              <input type="text" className={inputClass} placeholder="Ex: Ana Silva" value={formData.broker_name} onChange={e => set("broker_name", e.target.value)} />
-            </div>
-            <div>
-              <label className={labelClass}>WhatsApp do Corretor</label>
-              <input type="tel" className={inputClass} placeholder="Ex: 5568999299010" value={formData.broker_whatsapp} onChange={e => set("broker_whatsapp", e.target.value)} />
             </div>
           </div>
         </div>

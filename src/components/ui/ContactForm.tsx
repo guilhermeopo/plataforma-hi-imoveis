@@ -21,6 +21,8 @@ export function ContactForm({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  
+  const displayBrokerName = brokerName || "Hi imóveis e construções";
 
   const handleWhatsApp = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,9 +31,9 @@ export function ContactForm({
       return;
     }
 
-    const number = brokerWhatsapp || "556899299010";
+    const number = brokerWhatsapp || "5568999299010";
     const cleanNumber = number.replace(/\D/g, '');
-    
+
     let text = "";
     if (isGeneralContact) {
       text = `Olá! Meu nome é *${name}*.
@@ -41,7 +43,7 @@ Meu telefone de retorno é: ${phone}${email ? `\nMeu e-mail alternativo: ${email
 
 Aguardando retorno, obrigado!`.replace(/      /g, '');
     } else {
-      text = `Olá${brokerName ? ' ' + brokerName : ''}! Meu nome é *${name}*.
+      text = `Olá ${displayBrokerName}! Meu nome é *${name}*.
       
 Estou entrando em contato através do site pois tenho muito interesse no imóvel:
 📍 *${propertyTitle}*${propertyCode ? ` (CÓD: ${propertyCode})` : ''}
@@ -56,14 +58,14 @@ Aguardando retorno, obrigado!`.replace(/      /g, '');
   };
 
   const handleQuickWhatsApp = () => {
-    const number = brokerWhatsapp || "556899299010";
+    const number = brokerWhatsapp || "5568999299010";
     const cleanNumber = number.replace(/\D/g, '');
     
     let text = "";
     if (isGeneralContact) {
       text = `Olá! Estou na página de contato do site e gostaria de falar com um de seus consultores. Pode me ajudar?`;
     } else {
-      text = `Olá${brokerName ? ' ' + brokerName : ''}! Tenho interesse no imóvel: *${propertyTitle}*${propertyCode ? ` (CÓD: ${propertyCode})` : ''}. Pode me ajudar?`;
+      text = `Olá ${displayBrokerName}! Tenho interesse no imóvel: *${propertyTitle}*${propertyCode ? ` (CÓD: ${propertyCode})` : ''}. Pode me ajudar?`;
     }
     
     window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent(text)}`, '_blank');
@@ -75,9 +77,7 @@ Aguardando retorno, obrigado!`.replace(/      /g, '');
       <p className="text-neutral-500 text-sm mb-8 font-medium">
         {isGeneralContact
           ? "Preencha o formulário abaixo e direcionaremos você ao consultor ideal."
-          : (brokerName 
-              ? `Fale diretamente com nosso corretor especialista, ${brokerName}.`
-              : `Fale diretamente com nosso corretor especializado neste imóvel.`)}
+          : `Fale diretamente com nosso corretor especializado: ${displayBrokerName}.`}
       </p>
       
       <form onSubmit={handleWhatsApp} className="space-y-4">
